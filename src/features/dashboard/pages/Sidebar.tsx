@@ -2,6 +2,11 @@ import { RiMenuUnfold4Fill } from "react-icons/ri";
 import Menue from "../components/Menue";
 import { TbLogout } from "react-icons/tb";
 import { MdOutlineSettings } from "react-icons/md";
+import { useNavigate } from "react-router";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { logout } from "../../../services/operations/auth";
+import { ImSpinner3 } from "react-icons/im";
+// import { ImSpinner3 } from "react-icons/im";
 // import { logout } from "../../../services/operations/auth";
 // import { useAppDispatch} from "../../../store/hooks";
 // import { useNavigate } from "react-router-dom";
@@ -14,16 +19,14 @@ interface SidebarProps {
 
 export default function Sidebar({ setActiveSidebar }: SidebarProps) {
 
-  // const dispatch = useAppDispatch();
-  // const navigate = useNavigate();
-  // const { loading } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { loading } = useAppSelector((state) => state.user);
 
   function logoutHandler() {
     console.log("Clicked logout");
-    // dispatch(logout(navigate));
+    dispatch(logout(navigate));
   }
-
-
 
   return (
     <div className="min-w-64 bg-blue-950 h-screen flex flex-col">
@@ -45,7 +48,8 @@ export default function Sidebar({ setActiveSidebar }: SidebarProps) {
         <div className="flex items-center gap-4 hover:text-red-600 hover:bg-gray-700 p-1 rounded-md pl-4">
           <TbLogout size={25} />
           <button className="text-md" onClick={logoutHandler}>
-            {/* {loading ? <ImSpinner3 className="animate-spin" /> : "Logout"} */}
+            {loading ? <ImSpinner3 className="animate-spin" /> : "Logout"}
+            {/* Logout */}
           </button>
         </div>
         <div className="flex items-center gap-4 hover:text-blue-600 hover:bg-gray-700 p-1 rounded-md pl-4">

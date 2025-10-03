@@ -8,6 +8,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import CreateAgency from "../features/dashboard/pages/trafficagency/layout/createAgencyLayout";
 import CampaignLayout from "../features/dashboard/pages/trafficagency/layout/CampaignLayout";
 import CreateVendorLayout from "../features/dashboard/pages/vendor/vendorLayout/CreateVendorLayout";
+import RoutingRuleLayout from "../features/dashboard/pages/routingRule/layout/CampaignLayout";
 
  
 
@@ -16,7 +17,7 @@ export const router = createBrowserRouter([
 
   { path: "/", element: <Navigate to="/login" replace /> },
   {
-    element: <OpenRoute />, // 👈 children yaha aayenge Outlet ke
+    element: <OpenRoute/>, // 👈 children yaha aayenge Outlet ke
     children: [
       { path: "/login", element: <Login /> },
     ],
@@ -40,9 +41,8 @@ export const router = createBrowserRouter([
           { path: "createagency", element: <CreateAgency/> },
           { path: "agencycampaigns", element: <CampaignLayout />},
           { path: "vendor", element: <CreateVendorLayout />},
-          // { path: "shows", element: <ShowsComponent /> }, 
-          // { path: "ticket-category", element: <TicketCategory/> }, 
-        
+          { path: "routing-rule", element: <RoutingRuleLayout />},
+ 
   
           // {
           //   path: "location",

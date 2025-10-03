@@ -3,7 +3,6 @@ import { FaLocationDot } from "react-icons/fa6";
 import { LiaCitySolid } from "react-icons/lia";
 import { useState } from "react";
 import { FaChalkboardUser } from "react-icons/fa6";
-import { PiWarehouseBold } from "react-icons/pi"; 
 import { GrVirtualMachine } from "react-icons/gr";
 import { NavLink } from "react-router-dom";
 
@@ -22,15 +21,14 @@ const sideData = [
     id: 2,
     title: "Vendor",
     submenu: [
-      { key: "organizer", title: "Organizer", path: "/dashboard/vendor", icon: <FaChalkboardUser size={20}/> },
+      { key: "vendor", title: "Vendor", path: "/dashboard/vendor", icon: <FaChalkboardUser size={20}/> },
     ],
   },
   {
     id: 3,
-    title: "Routing Rule",
+    title: "Routing",
     submenu: [
-      { key: "facility", title: "Facilities", path: "/dashboard/routingrule", icon: <GrVirtualMachine size={20}/> },
-      { key: "venue", title: "Venue", path: "/dashboard/venue", icon: <PiWarehouseBold size={20}/>, end: true },
+      { key: "routingrule", title: "Routing Rule", path: "/dashboard/routing-rule", icon: <GrVirtualMachine size={20}/> },
     ],
   },
  
@@ -93,7 +91,6 @@ export default function Menue() {
                 <NavLink
                   key={sub.key}
                   to={sub.path}
-                  end={sub.end} // 👈 yahan exact match ke liye handle kiya
                   className={({ isActive }) =>
                     `flex items-center gap-2 p-1 rounded-md transition ${
                       isActive ? "bg-white text-black" : "text-gray-300 hover:text-blue-500"

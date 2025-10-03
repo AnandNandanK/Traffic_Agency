@@ -17,10 +17,11 @@ interface UserState {
 
 // Initial state
 const initialState: UserState = {
-  user: null,
+  user: JSON.parse(localStorage.getItem("user") || "null"),
   errorMassage:null,
   loading:false
 };
+
 
 // Slice
 const userSlice = createSlice({

@@ -14,10 +14,11 @@ export default function Login() {
   const { loading } = useAppSelector((state) => state.user);
 
   const [formData, setFormData] = useState({
-    email: "",
+    userEmail: "",
     password: "",
   });
 
+  
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -43,8 +44,8 @@ export default function Login() {
             <img src="ticketlogo2.jpg" className=""></img>
             </div> */}
 
-            <h1 className="text-8xl font-bold font text-white px-1 w-fit mx-auto">
-              Agency
+            <h1 className="text-7xl text-center font-bold font text-white px-1 w-fit mx-auto">
+             Traffic Agency
             </h1>
 
             <p className="text-gray-200 mt-4 text-sm text-center">
@@ -77,9 +78,9 @@ export default function Login() {
               <label className="flex items-center bg-blue-50 py-3 px-8 rounded-3xl border-2 border-transparent focus-within:border-gray-300">
                 <FaUser className="text-xl text-gray-400" />
                 <input
-                  name="email"
+                  name="userEmail"
                   required={true}
-                  value={formData.email || ""}
+                  value={formData.userEmail || ""}
                   type="email"
                   placeholder="User email"
                   onChange={onChangeHandler}

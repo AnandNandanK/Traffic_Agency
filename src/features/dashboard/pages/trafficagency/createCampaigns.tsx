@@ -1,8 +1,14 @@
 import type { Dispatch, SetStateAction } from "react";
 import React, { useEffect, useState } from "react";
 import Slider from "@mui/material/Slider";
-import { useAppDispatch } from "../../../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import { MdOutlineArrowDropDownCircle } from "react-icons/md";
+import {
+  CreateCampaign,
+  getAllAgency,
+} from "../../../../services/operations/agency";
+import { ImSpinner3 } from "react-icons/im";
+import type { CampaignResponse } from "../../../../interfaces/agencyInterface";
 
 // Types
 type Params = {
@@ -13,20 +19,15 @@ type Params = {
   };
 };
 
-type Campaigns = {
+export type Campaigns<T> = {
   agencyId: number;
   name: string;
   callbackUrl: string;
-  urlParams: Params;
+  urlParams: T;
   notificationThreshold: number;
 };
 
-interface CampaignsCardProps {
-  popUp?: Dispatch<SetStateAction<boolean>>;
-  context: string;
-  CampaignsId: number;
-  setContext: Dispatch<SetStateAction<string>>;
-}
+
 
 // Input Data
 const inputData = [
@@ -38,27 +39,35 @@ const inputData = [
   },
 ];
 
-const options = ["India", "USA", "Canada", "Australia", "Germany"];
+interface CampaignsCardProps {
+  setCampaignData?: Dispatch<SetStateAction<CampaignResponse | null>>;
+  campaignData?: CampaignResponse | null;
+  popUp?: Dispatch<SetStateAction<boolean>>;
+  context?: string;
+  setContext?: Dispatch<SetStateAction<string>>;
+}
+
 
 export default function CreateCampaigns({
+  setCampaignData,
+  campaignData,
   popUp,
   context,
-  CampaignsId,
   setContext,
 }: CampaignsCardProps) {
   const dispatch = useAppDispatch();
 
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState("Select an agency");
+  const [selected, setSelected] = useState<string>("Select an agency");
 
-  
-  // Error state typed safely
-  const [countriesError, setCountriesError] = useState<
-    Partial<Record<keyof Campaigns, string>>
-  >({});
+  const agency = useAppSelector((state) => state.agency.data || []);
+
+  const { loading } = useAppSelector((state) => state.agency);
+
+  console.log("PROPS..",campaignData);
 
   // Form state
-  const [form, setForm] = useState<Campaigns>({
+  const [form, setForm] = useState<Campaigns<Params>>({
     agencyId: 0,
     name: "",
     callbackUrl: "",
@@ -72,35 +81,75 @@ export default function CreateCampaigns({
     notificationThreshold: 50,
   });
 
-
   const handleChange = (
-    key: keyof Campaigns,
+    key: keyof Campaigns<Params>,
     value: string | number | boolean
   ) => setForm((f) => ({ ...f, [key]: value }));
 
+  const formData = {
+    ...form,
+    urlParams: {
+      ...form.urlParams,
+      additionalParams: {
+        [form.urlParams.additionalParams.key]:
+          form.urlParams.additionalParams.value,
+      },
+    },
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (context === "Create") {
-      console.log("Submitting form data:", form);
+      const res = await dispatch(CreateCampaign(formData));
+      if (res) {
+        popUp?.(false);
+      }
+      console.log("Submitting form data:", formData);
     } else if (context === "Edit") {
-      console.log("Updating Campaign ID:", CampaignsId, form);
+      console.log("Updating Campaign ID:", form);
     }
-
-    console.log(form)
+    console.log(form);
   };
 
   useEffect(() => {
-    if (context === "Edit") {
-      // dispatch(getCampaignsById(CampaignsId));
-    }
-  }, [context, CampaignsId, dispatch]);
+    dispatch(getAllAgency());
+  }, [dispatch]);
+
+
+  useEffect(() => {
+  if (campaignData) {
+    // Get first key/value from additionalParams
+    const [firstKey, firstValue] = Object.entries(
+      campaignData.urlParams.additionalParams
+    )[0] || ["", ""];
+
+    setForm({
+      agencyId: campaignData.agencyId ?? 0,
+      name: campaignData.name ?? "",
+      callbackUrl: campaignData.callbackUrl ?? "",
+      urlParams: {
+        clickIdKey: campaignData.urlParams.clickIdKey ?? "",
+        additionalParams: {
+          key: firstKey,
+          value: firstValue,
+        },
+      },
+      notificationThreshold: campaignData.notificationThreshold ?? 50,
+    });
+
+    
+     const selectedAgency = agency.find(
+      (a) => a.id === campaignData.agencyId
+    );
+    if (selectedAgency) setSelected(selectedAgency.name);
+  }
+}, [context, dispatch, campaignData,agency]);
+
 
   return (
-
     <div
-      className="min-h-screen inset-0 fixed backdrop-blur-2xl p-6 z-50 
+      className="min-h-screen inset-0 fixed bg-black/40 p-6 z-50 
             flex items-center justify-center"
     >
       <form
@@ -112,12 +161,24 @@ export default function CreateCampaigns({
           id="edit-Campaigns-title"
           className="text-2xl font-extrabold text-slate-900 mb-6"
         >
-          {context === "Create" ? "Create Agency" : "Update Agency"}
+          {context === "Create" ? "Create Campaign" : "Update Campaign"}
         </h2>
 
         <div className="space-y-2 w-full relative">
           {/* Dropdown */}
           <div>
+
+            {
+              context==="Edit"?(
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Select Agency
+            </label>
+              ):(null)
+            }
+
+            
+
+
             <button
               onClick={() => setOpen(!open)}
               type="button"
@@ -133,16 +194,20 @@ export default function CreateCampaigns({
 
             {open && (
               <ul className="absolute mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg z-10 animate-fadeIn">
-                {options.map((option, index) => (
+                {agency.map((option, index) => (
                   <li
                     key={index}
                     onClick={() => {
-                      setSelected(option);
+                      setSelected(option?.name);
+                      setForm((prev) => ({
+                        ...prev,
+                        agencyId: option?.id,
+                      }));
                       setOpen(false);
                     }}
                     className="px-4 py-2 cursor-pointer hover:bg-sky-100 hover:text-sky-600 transition-colors"
                   >
-                    {option}
+                    {option.name}
                   </li>
                 ))}
               </ul>
@@ -160,22 +225,19 @@ export default function CreateCampaigns({
                 <input
                   type="text"
                   required
-                  value={form[item.key as keyof Campaigns] as string}
-
+                  value={form[item.key as keyof Campaigns<Params>] as string}
                   onChange={(e) =>
-                    handleChange(item.key as keyof Campaigns, e.target.value)
+                    handleChange(
+                      item.key as keyof Campaigns<Params>,
+                      e.target.value
+                    )
                   }
                   placeholder={item.placeholder}
-                  className={`w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 ${
-                    countriesError?.[item.key as keyof Campaigns]
-                      ? "border-red-500 focus:ring-red-500"
-                      : "border-slate-200 focus:ring-sky-400"
-                  }`}
+                  className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
                 />
               </div>
             );
           })}
-
 
           {/* Url Params Section */}
           <div className="p-3 border-slate-200 border-4 rounded-2xl space-y-3.5">
@@ -273,14 +335,8 @@ export default function CreateCampaigns({
             type="button"
             onClick={() => {
               popUp?.(false);
-              setContext("");
-              setForm({
-                agencyId: 0,
-                name: "",
-                callbackUrl: "",
-                urlParams: { clickIdKey: "", additionalParams: { key: "", value: "" } },
-                notificationThreshold: 50,
-              });
+              setContext?.("");
+              setCampaignData?.(null); 
             }}
             className="px-6 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 font-medium hover:bg-slate-50"
           >
@@ -289,9 +345,10 @@ export default function CreateCampaigns({
 
           <button
             type="submit"
-            className="px-6 py-2 rounded-lg bg-sky-700 text-white font-semibold shadow hover:bg-sky-800"
+            disabled={loading}
+            className="px-6 w-3/12 h-10 py-2 flex justify-center items-center rounded-lg bg-sky-700 text-white font-semibold shadow hover:bg-sky-800"
           >
-            Save
+            {loading ? <ImSpinner3 className="animate-spin" /> : "Save"}
           </button>
         </div>
       </form>

@@ -7,7 +7,6 @@ export default function CreateVendorLayout() {
 
   const [showEditCard, setShowEditCard] = useState(false); // 👈 state
   const [context, setContext] = useState("");
-  const [rowId, setRowId] = useState<number>(0);
 
 
   return (
@@ -21,13 +20,13 @@ export default function CreateVendorLayout() {
             setShowEditCard(true);
             setContext("Create");
           }}
-         className="bg-green-400 text-white p-2 rounded-sm hover:cursor-pointer flex gap-1 items-center uppercase font-semibold shadow-lg shadow-black/40">Create Agency<span><FaPlus /></span></button>
+         className="bg-green-400 text-white p-2 rounded-sm hover:cursor-pointer flex gap-1 items-center uppercase font-semibold shadow-lg shadow-black/40">Create Vendor<span><FaPlus /></span></button>
         <button 
           onClick={() => {
             setShowEditCard(true);
             setContext("Edit");
           }}
-        className="bg-sky-500 text-white p-2 rounded-sm hover:cursor-pointer flex gap-1 items-center uppercase font-semibold shadow-lg shadow-black/40">Update Agency <span><MdSystemUpdateAlt /></span></button>
+        className="bg-sky-500 text-white p-2 rounded-sm hover:cursor-pointer flex gap-1 items-center uppercase font-semibold shadow-lg shadow-black/40">Update Vendor <span><MdSystemUpdateAlt /></span></button>
 
       </div>
 
@@ -38,7 +37,6 @@ export default function CreateVendorLayout() {
         <CreateVendor
           popUp={setShowEditCard}
           context={context}
-          countryId={rowId}
           setContext={setContext}
         />
       )}

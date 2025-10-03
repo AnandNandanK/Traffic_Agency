@@ -2,12 +2,13 @@
 
 import { Navigate, Outlet } from "react-router";
 import { useAppSelector } from "../store/hooks";
+// import { useAppSelector } from "../store/hooks";
 
 function OpenRoute() {
- const user = useAppSelector((state) => state.user.user);
-
-  if (user===null) {
-    return <Outlet />;   // 👈 Router ke children render honge
+  const user = useAppSelector((state) => state.user.user);
+  console.log(user);
+  if (user == null) {
+    return <Outlet />; // 👈 Router ke children render honge
   } else {
     return <Navigate to="/dashboard" replace />;
   }

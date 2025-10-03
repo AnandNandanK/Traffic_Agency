@@ -1,7 +1,8 @@
 import type { Dispatch } from "react";
 import React, { useEffect, useState, type SetStateAction } from "react";
 
-import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
+import { useAppDispatch, } from "../../../../store/hooks";
+import { createVendor } from "../../../../services/operations/vendor";
 
 
 type Vendor = {
@@ -12,15 +13,12 @@ type Vendor = {
 interface VendorCardProps {
   popUp?: Dispatch<SetStateAction<boolean>>;
   context: string;
-  VendorId: number;
   setContext: Dispatch<SetStateAction<string>>;
 }
-
 
 export default function CreateVendor({
   popUp,
   context,
-  VendorId,
   setContext,
 }: VendorCardProps) {
 
@@ -48,6 +46,12 @@ const countriesError={
     e.preventDefault();
     if (context === "Create") {
 
+     const res= await dispatch(createVendor(form.name));
+
+     if(res){
+      popUp?.(false);
+     }
+
       console.log(form);
       console.log(context);
     }
@@ -64,7 +68,7 @@ const countriesError={
     if (context === "Edit") {
     //   dispatch(getVendorById(VendorId));
     }
-  }, [context, VendorId, dispatch]);
+  }, [context,  dispatch]);
 
 
 //   useEffect(() => {

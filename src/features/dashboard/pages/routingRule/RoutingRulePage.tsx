@@ -4,7 +4,6 @@ import React, { useEffect, useState, type SetStateAction } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import { CreateAgency } from "../../../../services/operations/agency";
 import { ImSpinner3 } from "react-icons/im";
-import type { AgencyData } from "./AgencyTable";
 
 type Country = {
   name: string;
@@ -12,25 +11,26 @@ type Country = {
   contactPhone: string;
 };
 
+
 interface AgencyCardProps {
-  setAgencyData?: Dispatch<SetStateAction<AgencyData | null>>;
-  agencyData?: AgencyData | null;
   popUp?: Dispatch<SetStateAction<boolean>>;
   context: string;
   setContext: Dispatch<SetStateAction<string>>;
 }
 
+
 export default function AgencyCUpage({
-  setAgencyData,
-  agencyData,
   popUp,
   context,
   setContext,
 }: AgencyCardProps) {
+
   console.log(agencyData);
 
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.user.loading);
+  
+
 
   const [form, setForm] = useState<Country>({
     name: "",
@@ -60,25 +60,31 @@ export default function AgencyCUpage({
     }
   };
 
-  function cancelHandler() {
-    console.log("Clicked in Cancel and context is: ", context);
 
-    if (context === "Create") {
+  function cancelHandler(){
+    console.log("Clicked in Cancel and context is: ",context)
+    
+
+    if (context==="Create") {
       popUp?.(false);
-    }
-
-    setAgencyData?.(null);
-    setContext("");
+    } 
+    
+    //   setAgencyData?.(null);
+              setContext("");
   }
 
-  useEffect(() => {
-    if (context === "Edit")
-      setForm({
-        name: agencyData?.name ?? "",
-        contactEmail: agencyData?.contactEmail ?? "",
-        contactPhone: agencyData?.contactPhone ?? "",
-      });
-  }, [agencyData, context]);
+
+//   useEffect(()=>{
+//     if(context==="Edit")
+//     setForm({
+//        name: agencyData?.name??"",
+//           contactEmail: agencyData?.contactEmail??"",
+//           contactPhone: agencyData?.contactPhone??"",
+
+//     })
+//   },[agencyData,context])
+
+
 
   return (
     <div
@@ -111,8 +117,9 @@ export default function AgencyCUpage({
               onChange={(e) => handleChange("name", e.target.value)}
               placeholder="Enter Agency Name"
               //   onFocus={() => dispatch(setCountryError(null))}
-              className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
+             className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
             />
+        
           </div>
 
           {/* ISO Code */}
@@ -128,6 +135,7 @@ export default function AgencyCUpage({
               placeholder="Enter Contact Email"
               className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
             />
+           
           </div>
 
           {/* ISO Code */}
@@ -141,8 +149,9 @@ export default function AgencyCUpage({
               // onFocus={() => dispatch(setCountryError(null))}
               onChange={(e) => handleChange("contactPhone", e.target.value)}
               placeholder="Enter Contact Phone"
-              className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
+          className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
             />
+       
           </div>
         </div>
 
