@@ -15,6 +15,7 @@ interface UserState {
   loading:boolean
 }
 
+
 // Initial state
 const initialState: UserState = {
   user: JSON.parse(localStorage.getItem("user") || "null"),

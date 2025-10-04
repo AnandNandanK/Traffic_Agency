@@ -1,5 +1,4 @@
 import { RiMenuUnfold3Line } from "react-icons/ri";
-import { FaUser } from "react-icons/fa";
 
 interface NavbarProps {
   activeSidebar: boolean;
@@ -30,8 +29,13 @@ export default function Navbar({
         </button>
 
         {/* User Icon */}
-        <div className="border-2 border-gray-400 rounded-full p-3">
-          <FaUser size={20} className="text-gray-400" />
+        <div className="border-2 border-gray-400 rounded-full ">
+          <div>
+            <img src="https://previews.123rf.com/images/yupiramos/yupiramos1709/yupiramos170923125/86479302-laptop-computer-with-user-vector-illustration-design.jpg"
+            className="h-10 w-10 rounded-full"
+            ></img>
+          </div>
+          {/* <FaUser size={20} className="text-gray-400" /> */}
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import axios from "axios";
 import type { AppDispatch } from "../../store/store";
 import { apiConnector } from "../apiConnetor";
 import type { Common } from "../../interfaces/commonInterface";
-import { setLoading } from "../../slices/userSlice";
+import { setErrorMsaage, setLoading } from "../../slices/userSlice";
 import { setAgency, setAgencyLoading, type AllAgencyResponse } from "../../slices/agencySlice";
 import type { Campaigns } from "../../features/dashboard/pages/trafficagency/createCampaigns";
 import { setCampaign } from "../../slices/campaignSlice";
@@ -45,7 +45,7 @@ export function CreateAgency(formData: CreateAgencyProps) {
       return false;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-     
+        dispatch(setErrorMsaage(error.response?.data?.message))
         console.error("Axios error:", error.response?.data);
       } else {
         console.error("Unknown error:", error);
@@ -82,7 +82,7 @@ export function getAllAgency() {
 
     } catch (error) {
       if (axios.isAxiosError(error)) {
-     
+      dispatch(setErrorMsaage(error.response?.data?.message))
         console.error("Axios error:", error.response?.data);
       } else {
         console.error("Unknown error:", error);
@@ -129,7 +129,7 @@ export function CreateCampaign(formData: Campaigns<urlParamsResponse>) {
       return false;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-     
+      dispatch(setErrorMsaage(error.response?.data?.message))
         console.error("Axios error:", error.response?.data);
       } else {
         console.error("Unknown error:", error);
@@ -169,7 +169,7 @@ export function getAllCampaign() {
 
     } catch (error) {
       if (axios.isAxiosError(error)) {
-     
+      dispatch(setErrorMsaage(error.response?.data?.message))
         console.error("Axios error:", error.response?.data);
       } else {
         console.error("Unknown error:", error);

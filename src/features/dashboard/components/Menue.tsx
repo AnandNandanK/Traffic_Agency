@@ -1,18 +1,17 @@
 import { MdKeyboardArrowRight } from "react-icons/md";
-import { FaLocationDot } from "react-icons/fa6";
 import { LiaCitySolid } from "react-icons/lia";
 import { useState } from "react";
 import { FaChalkboardUser } from "react-icons/fa6";
 import { GrVirtualMachine } from "react-icons/gr";
 import { NavLink } from "react-router-dom";
-
+import { ImTrello } from "react-icons/im";
 
 const sideData = [
   {
     id: 1,
     title: "Traffic Agency",
     submenu: [
-      { key: "createagency", title: "Create Agency", path: "/dashboard/createagency", icon: <FaLocationDot /> },
+      { key: "createagency", title: "Create Agency", path: "/dashboard/createagency", icon: <ImTrello  /> },
       { key: "createcampaigns", title: "Create campaigns", path: "/dashboard/agencycampaigns", icon: <LiaCitySolid /> },
       // { key: "city", title: "Cities", path: "/dashboard/location/cities", icon: <GiModernCity /> },
     ],

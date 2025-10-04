@@ -5,6 +5,7 @@ import { useAppDispatch } from "../../../../store/hooks";
 import { createVendor } from "../../../../services/operations/vendor";
 import type { Vendor } from "../../../../interfaces/vendorInterface";
 import Slider from "@mui/material/Slider";
+import ErrorPopup from "../../../../components/ErrorPopupPage";
 
 
 type InputField = {
@@ -112,6 +113,7 @@ const formData: Vendor = {
       className="min-h-screen inset-0 fixed  bg-black/40 p-6 z-50 
             flex items-center justify-center"
     >
+      <ErrorPopup/>
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-lg p-6 sm:p-8"

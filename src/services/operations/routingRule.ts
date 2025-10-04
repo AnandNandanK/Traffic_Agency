@@ -5,12 +5,13 @@ import type { AppDispatch } from "../../store/store";
 import { setDropdownCampaign } from "../../slices/campaignSlice";
 import type { Routing } from "../../interfaces/routingRuleInterface";
 import { setDropdownVendor } from "../../slices/vendorSlice";
+import { setErrorMsaage } from "../../slices/userSlice";
 const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
 
 
 
 export function createRoutingRule(formData:Routing) {
-  return async (): Promise<boolean> => {
+  return async (dispatch:AppDispatch): Promise<boolean> => {
     try {
     //   dispatch(setAgencyLoading(true));
 
@@ -32,7 +33,7 @@ export function createRoutingRule(formData:Routing) {
       return false;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-     
+      dispatch(setErrorMsaage(error.response?.data?.message))
         console.error("Axios error:", error.response?.data);
       } else {
         console.error("Unknown error:", error);
@@ -76,7 +77,7 @@ export function getDropdownCampaign() {
 
     } catch (error) {
       if (axios.isAxiosError(error)) {
-     
+      dispatch(setErrorMsaage(error.response?.data?.message))
         console.error("Axios error:", error.response?.data);
       } else {
         console.error("Unknown error:", error);
@@ -113,7 +114,7 @@ export function getDropdownVendor() {
 
     } catch (error) {
       if (axios.isAxiosError(error)) {
-     
+      dispatch(setErrorMsaage(error.response?.data?.message))
         console.error("Axios error:", error.response?.data);
       } else {
         console.error("Unknown error:", error);

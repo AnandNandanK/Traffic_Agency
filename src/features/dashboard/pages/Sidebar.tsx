@@ -6,10 +6,6 @@ import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { logout } from "../../../services/operations/auth";
 import { ImSpinner3 } from "react-icons/im";
-// import { ImSpinner3 } from "react-icons/im";
-// import { logout } from "../../../services/operations/auth";
-// import { useAppDispatch} from "../../../store/hooks";
-// import { useNavigate } from "react-router-dom";
 
 
 interface SidebarProps {

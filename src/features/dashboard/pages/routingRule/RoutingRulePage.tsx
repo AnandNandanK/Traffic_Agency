@@ -5,6 +5,7 @@ import { ImSpinner3 } from "react-icons/im";
 import type { Routing } from "../../../../interfaces/routingRuleInterface";
 import { MdOutlineArrowDropDownCircle } from "react-icons/md";
 import { createRoutingRule } from "../../../../services/operations/routingRule";
+import ErrorPopup from "../../../../components/ErrorPopupPage";
 
 interface AgencyCardProps {
   popUp?: Dispatch<SetStateAction<boolean>>;
@@ -75,6 +76,7 @@ export default function RoutingRulePage({
       className="min-h-screen inset-0 fixed  bg-black/40 p-6 z-50 
             flex items-center justify-center "
     >
+      <ErrorPopup/>
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-lg p-6 sm:p-8"

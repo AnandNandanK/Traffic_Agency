@@ -4,6 +4,8 @@ import type { Common } from "../../interfaces/commonInterface";
 
 import { apiConnector } from "../apiConnetor";
 import type { Vendor } from "../../interfaces/vendorInterface";
+import { setErrorMsaage } from "../../slices/userSlice";
+import type { AppDispatch } from "../../store/store";
 const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
 
 
@@ -13,7 +15,7 @@ const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
 
 
 export function createVendor(formData:Vendor) {
-  return async (): Promise<boolean> => {
+  return async (dispatch:AppDispatch): Promise<boolean> => {
     try {
     //   dispatch(setAgencyLoading(true));
 
@@ -35,7 +37,7 @@ export function createVendor(formData:Vendor) {
       return false;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-     
+      dispatch(setErrorMsaage(error.response?.data?.message))
         console.error("Axios error:", error.response?.data);
       } else {
         console.error("Unknown error:", error);
