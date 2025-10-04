@@ -77,5 +77,4 @@ export const router = createBrowserRouter([
     ],
   },
   
-
-]);
+],{basename:"/routing-dashboard/"});

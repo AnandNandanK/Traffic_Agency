@@ -18,7 +18,6 @@ export default function Login() {
     password: "",
   });
 
-  
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
