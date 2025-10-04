@@ -8,7 +8,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import CreateAgency from "../features/dashboard/pages/trafficagency/layout/createAgencyLayout";
 import CampaignLayout from "../features/dashboard/pages/trafficagency/layout/CampaignLayout";
 import CreateVendorLayout from "../features/dashboard/pages/vendor/vendorLayout/CreateVendorLayout";
-import RoutingRuleLayout from "../features/dashboard/pages/routingRule/layout/CampaignLayout";
+import RoutingRuleLayout from "../features/dashboard/pages/routingRule/layout/RoutingLayout";
 
  
 

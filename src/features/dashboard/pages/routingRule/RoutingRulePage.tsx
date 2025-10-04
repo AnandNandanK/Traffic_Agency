@@ -1,16 +1,10 @@
 import type { Dispatch } from "react";
-import React, { useEffect, useState, type SetStateAction } from "react";
-
+import React, { useState, type SetStateAction } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
-import { CreateAgency } from "../../../../services/operations/agency";
 import { ImSpinner3 } from "react-icons/im";
-
-type Country = {
-  name: string;
-  contactEmail: string;
-  contactPhone: string;
-};
-
+import type { Routing } from "../../../../interfaces/routingRuleInterface";
+import { MdOutlineArrowDropDownCircle } from "react-icons/md";
+import { createRoutingRule } from "../../../../services/operations/routingRule";
 
 interface AgencyCardProps {
   popUp?: Dispatch<SetStateAction<boolean>>;
@@ -18,73 +12,63 @@ interface AgencyCardProps {
   setContext: Dispatch<SetStateAction<string>>;
 }
 
-
-export default function AgencyCUpage({
+export default function RoutingRulePage({
   popUp,
   context,
   setContext,
 }: AgencyCardProps) {
-
-  console.log(agencyData);
-
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.user.loading);
-  
+
+  const [open, setOpen] = useState(false);
+  const [openAgency, setOpenAgency] = useState(false);
+
+  const campaignDropdown = useAppSelector(
+    (state) => state.campaign.dropDown || []
+  );
+  const vendorDropdown = useAppSelector((state) => state.vendor.dropDown || []);
+
+  const [selectedCampaign, setSelectedCampaign] =
+    useState<string>("Select an Campaign");
+  const [selectedVendor, setSelectedVendor] =
+    useState<string>("Select an Vendor");
 
 
-  const [form, setForm] = useState<Country>({
-    name: "",
-    contactEmail: "",
-    contactPhone: "",
+  const [form, setForm] = useState<Routing>({
+    campaignId: 0,
+    vendorId: 0,
+    clickCount: undefined,
   });
 
   console.log(context);
-  const handleChange = (key: keyof Country, value: string | number | boolean) =>
-    setForm((f) => ({ ...f, [key]: value }));
+
+  const formData = {
+    ...form,
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (context === "Create") {
-      const res = await dispatch(CreateAgency(form));
+      const res = await dispatch(createRoutingRule(formData));
 
       if (res) {
         popUp?.(false);
-        setForm({
-          name: "",
-          contactEmail: "",
-          contactPhone: "",
-        });
       }
       console.log(form);
       console.log(context);
     }
   };
 
+  function cancelHandler() {
+    console.log("Clicked in Cancel and context is: ", context);
 
-  function cancelHandler(){
-    console.log("Clicked in Cancel and context is: ",context)
-    
-
-    if (context==="Create") {
+    if (context === "Create") {
       popUp?.(false);
-    } 
-    
+    }
+
     //   setAgencyData?.(null);
-              setContext("");
+    setContext("");
   }
-
-
-//   useEffect(()=>{
-//     if(context==="Edit")
-//     setForm({
-//        name: agencyData?.name??"",
-//           contactEmail: agencyData?.contactEmail??"",
-//           contactPhone: agencyData?.contactPhone??"",
-
-//     })
-//   },[agencyData,context])
-
-
 
   return (
     <div
@@ -100,58 +84,117 @@ export default function AgencyCUpage({
           id="edit-country-title"
           className="text-2xl font-extrabold text-slate-900 mb-6"
         >
-          {context === "Create" ? "Create Agency" : "Update Agency"}
+          {context === "Create" ? "Create Routing" : "Update Routing"}
         </h2>
 
         <div className="space-y-2">
-          {/* Country Name */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              Agency Name
-            </label>
+          {/* ....................................CAMPAIGN.................................. */}
 
-            <input
-              type="text"
-              required={true}
-              value={form.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-              placeholder="Enter Agency Name"
-              //   onFocus={() => dispatch(setCountryError(null))}
-             className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
-            />
-        
+          {/* Dropdown */}
+          <div className="w-full relative">
+            {context === "Edit" ? (
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Select Campaign
+              </label>
+            ) : null}
+
+            <button
+              onClick={() => setOpen(!open)}
+              type="button"
+              className="w-full flex items-center justify-between bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-700 font-medium shadow-sm hover:shadow-md transition duration-200"
+            >
+              {selectedCampaign}
+              <MdOutlineArrowDropDownCircle
+                className={`w-5 h-5 transform transition-transform ${
+                  open ? "rotate-180" : "rotate-0"
+                }`}
+              />
+            </button>
+
+            {open && (
+              <ul className="absolute mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg z-10 animate-fadeIn">
+                {campaignDropdown.map((option, index) => (
+                  <li
+                    key={index}
+                    onClick={() => {
+                      setSelectedCampaign(option?.name);
+                      setForm((prev) => ({
+                        ...prev,
+                        campaignId: option?.id,
+                      }));
+                      setOpen(false);
+                    }}
+                    className="px-4 py-2 cursor-pointer hover:bg-sky-100 hover:text-sky-600 transition-colors"
+                  >
+                    {option.name}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
-          {/* ISO Code */}
-          <div>
+          {/* ....................................AGENCY................................... */}
+
+          <div className="relative">
+            {context === "Edit" ? (
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Select Agency
+              </label>
+            ) : null}
+
+            <button
+              onClick={() => setOpenAgency(!openAgency)}
+              type="button"
+              className="w-full flex items-center justify-between bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-700 font-medium shadow-sm hover:shadow-md transition duration-200"
+            >
+              {selectedVendor}
+              <MdOutlineArrowDropDownCircle
+                className={`w-5 h-5 transform transition-transform ${
+                  openAgency ? "rotate-180" : "rotate-0"
+                }`}
+              />
+            </button>
+
+            {openAgency && (
+              <ul className="absolute mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg z-10 animate-fadeIn">
+                {vendorDropdown .map((option, index) => (
+                  <li
+                    key={index}
+                    onClick={() => {
+                      setSelectedVendor(option?.name);
+                      setForm((prev) => ({
+                        ...prev,
+                        vendorId: option?.id,
+                      }));
+                      setOpenAgency(false);
+                    }}
+                    className="px-4 py-2 cursor-pointer hover:bg-sky-100 hover:text-sky-600 transition-colors"
+                  >
+                    {option.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          {/* Slider */}
+          <div className="mt-4">
             <label className="block text-sm font-medium text-slate-700 mb-2">
-              Contact Email
+              Click Count
             </label>
+
             <input
-              type="text"
-              value={form.contactEmail}
-              // onFocus={() => dispatch(setCountryError(null))}
-              onChange={(e) => handleChange("contactEmail", e.target.value)}
-              placeholder="Enter Contact Email"
+              type="number"
+              value={form.clickCount}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev, // keep all previous values
+                  clickCount: Number(e.target.value), // update only clickCount
+                }))
+              }
+              placeholder="Etner Click Count"
               className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
             />
-           
-          </div>
-
-          {/* ISO Code */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              Contact Phone
-            </label>
-            <input
-              type="text"
-              value={form.contactPhone}
-              // onFocus={() => dispatch(setCountryError(null))}
-              onChange={(e) => handleChange("contactPhone", e.target.value)}
-              placeholder="Enter Contact Phone"
-          className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
-            />
-       
           </div>
         </div>
 

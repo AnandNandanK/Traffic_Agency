@@ -3,11 +3,16 @@ import axios from "axios";
 import type { Common } from "../../interfaces/commonInterface";
 
 import { apiConnector } from "../apiConnetor";
+import type { Vendor } from "../../interfaces/vendorInterface";
 const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
 
 
 
-export function createVendor(name:string) {
+
+
+
+
+export function createVendor(formData:Vendor) {
   return async (): Promise<boolean> => {
     try {
     //   dispatch(setAgencyLoading(true));
@@ -15,10 +20,7 @@ export function createVendor(name:string) {
       const response = await apiConnector<Common<null>>({
         method: "POST",
         url:`${BASE_URL}/api/v1/vendors/create`,
-        bodyData: {name},
-        headers: {
-          "X-Client-Source": "WEB",
-        },
+        bodyData: formData,
         withCredentials: true,
       });
 

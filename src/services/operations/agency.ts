@@ -10,7 +10,6 @@ import type { CampaignResponse } from "../../interfaces/agencyInterface";
 const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
 
 
-
 export type CreateAgencyProps={
     name: string,
     contactEmail: string,
@@ -103,7 +102,6 @@ export interface urlParamsResponse{
   additionalParams: {
     [key: string]: string | undefined
   };
-
 }
 
 export function CreateCampaign(formData: Campaigns<urlParamsResponse>) {

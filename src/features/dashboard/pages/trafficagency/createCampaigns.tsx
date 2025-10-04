@@ -31,7 +31,7 @@ export type Campaigns<T> = {
 
 // Input Data
 const inputData = [
-  { key: "name", label: "Agency Name", placeholder: "Enter Agency Name" },
+  { key: "name", label: "Campaign Name", placeholder: "Enter Campaign Name" },
   {
     key: "callbackUrl",
     label: "Call Back Url",
@@ -117,6 +117,7 @@ export default function CreateCampaigns({
   }, [dispatch]);
 
 
+  
   useEffect(() => {
   if (campaignData) {
     // Get first key/value from additionalParams
@@ -248,7 +249,7 @@ export default function CreateCampaigns({
             {/* Click Id */}
             <div className="flex items-center gap-2">
               <label className="block text-sm font-medium text-slate-700 mb-2 text-left w-28">
-                Click Id
+                Click Id Key
               </label>
               <input
                 type="text"

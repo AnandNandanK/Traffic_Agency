@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { CampaignResponse } from "../interfaces/agencyInterface";
+import type { DropDown } from "../services/operations/routingRule";
 
 
 
@@ -15,6 +16,7 @@ export interface AllCampaignResponse {
 // State ka type
 interface UserState {
   data: CampaignResponse[] | null;
+  dropDown:DropDown[] | null;
   errorMassage:string | null;
   loading:boolean
 }
@@ -22,6 +24,7 @@ interface UserState {
 // Initial state
 const initialState: UserState = {
   data: null,
+  dropDown:null,
   errorMassage:null,
   loading:false
 };
@@ -34,6 +37,9 @@ const CampaignSlice = createSlice({
   reducers: {
     setCampaign(state, action: PayloadAction<CampaignResponse[] | null>) {
       state.data = action.payload;
+    },
+    setDropdownCampaign(state, action: PayloadAction<DropDown[] | null>) {
+      state.dropDown = action.payload;
     },
     setErrorMsaage(state, action: PayloadAction<string>) {
       state.errorMassage = action.payload;
@@ -49,5 +55,5 @@ const CampaignSlice = createSlice({
 });
 
 // Export
-export const { setCampaign, clearCampaign,setCampaignLoading,setErrorMsaage } = CampaignSlice.actions;
+export const { setCampaign, clearCampaign,setCampaignLoading,setErrorMsaage,setDropdownCampaign } = CampaignSlice.actions;
 export default CampaignSlice.reducer;

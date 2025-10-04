@@ -16,7 +16,6 @@ interface SidebarProps {
   setActiveSidebar: (value: boolean) => void;
 }
 
-
 export default function Sidebar({ setActiveSidebar }: SidebarProps) {
 
   const dispatch = useAppDispatch();

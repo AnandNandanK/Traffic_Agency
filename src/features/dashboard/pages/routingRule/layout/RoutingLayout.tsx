@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { MdSystemUpdateAlt } from "react-icons/md";
 
 import { useAppDispatch } from "../../../../../store/hooks";
-import { getAllCampaign } from "../../../../../services/operations/agency";
+import RoutingRulePage from "../RoutingRulePage";
+import { getDropdownCampaign, getDropdownVendor } from "../../../../../services/operations/routingRule";
 
 
 export default function RoutingRuleLayout() {
@@ -14,7 +14,8 @@ export default function RoutingRuleLayout() {
 
 
   useEffect(()=>{
-    dispatch(getAllCampaign());
+    dispatch(getDropdownCampaign());
+    dispatch(getDropdownVendor());
   },[dispatch])
 
   return (
@@ -29,12 +30,7 @@ export default function RoutingRuleLayout() {
             setContext("Create");
           }}
          className="bg-green-400 text-white p-2 rounded-sm hover:cursor-pointer flex gap-1 items-center uppercase font-semibold shadow-lg shadow-black/40">Create Routing Rule<span><FaPlus /></span></button>
-        <button 
-          onClick={() => {
-            setShowEditCard(true);
-            setContext("Edit");
-          }}
-        className="bg-sky-500 text-white p-2 rounded-sm hover:cursor-pointer flex gap-1 items-center uppercase font-semibold shadow-lg shadow-black/40">Update Routing Rule <span><MdSystemUpdateAlt /></span></button>
+    
 
       </div>
 
@@ -42,7 +38,7 @@ export default function RoutingRuleLayout() {
       {/* <CampaignTable  popUp={setShowEditCard} setContext={setContext} context={context}/> */}
 
       {showEditCard && (
-        <RoutingRuleLayout
+        <RoutingRulePage
           popUp={setShowEditCard}
           context={context}
           setContext={setContext}
