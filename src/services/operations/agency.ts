@@ -35,7 +35,6 @@ export function CreateAgency(formData: CreateAgencyProps) {
       console.log("CREATE AGENCY RESPONSE:", response.data);
 
       if (response.data.statusCode === 201) {
-        
         // ✅ Success case
         dispatch(getAllAgency());
         return true; // <--- return success
@@ -59,7 +58,7 @@ export function CreateAgency(formData: CreateAgencyProps) {
 
 
 
-export function getAllAgency(page?:number) {
+export function getAllAgency(page:number=0) {
   return async (dispatch: AppDispatch): Promise<boolean> => {
     try {
       dispatch(setLoading(true));
@@ -147,8 +146,7 @@ export function CreateCampaign(formData: Campaigns<urlParamsResponse>) {
 
 
 
-
-export function getAllCampaign(params?:number | undefined,page?:number) {
+export function getAllCampaign(params:number=0 ,page:number=0) {
   return async (dispatch: AppDispatch): Promise<boolean> => {
     try {
       dispatch(setLoading(true));

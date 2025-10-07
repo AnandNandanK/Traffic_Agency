@@ -23,6 +23,7 @@ const tableHead: { key: keyof CampaignResponse; name: string }[] = [
   { key: "notificationThreshold", name: "Notification Threshold" },
   { key: "totalVendorCallbackReceieved", name: "Total Vendor Call Back Receieved" },
   { key: "totalTrafficCallbackSend", name: "Total Traffic Callback Send" },
+  { key: "url", name: "Call Back Url " },
 ];
 
 

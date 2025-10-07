@@ -125,7 +125,15 @@ export default function RoutingTable({
             </tr>
           ))}
 
-          <tr></tr>
+          {Routing.length <1 && (<tr>
+            <td
+              colSpan={tableHead.length + 1} // +1 for Action column
+              className="py-6 text-center text-gray-500 "
+            >
+              No data found
+            </td>
+          </tr>)}
+
         </tbody>
       </table>
     </div>

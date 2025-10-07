@@ -9,6 +9,7 @@ import CreateAgency from "../features/dashboard/pages/trafficagency/layout/creat
 import CampaignLayout from "../features/dashboard/pages/trafficagency/layout/CampaignLayout";
 import CreateVendorLayout from "../features/dashboard/pages/vendor/vendorLayout/CreateVendorLayout";
 import RoutingRuleLayout from "../features/dashboard/pages/routingRule/layout/RoutingLayout";
+import ReportLayout from "../features/dashboard/pages/report/layout/reportLayout";
 
  
 
@@ -42,36 +43,8 @@ export const router = createBrowserRouter([
           { path: "agencycampaigns", element: <CampaignLayout />},
           { path: "vendor", element: <CreateVendorLayout />},
           { path: "routing-rule", element: <RoutingRuleLayout />},
- 
-  
-          // {
-          //   path: "location",
-          //   children: [
-          //     {
-          //       index: true, // 👈 /dashboard/location
-          //       element: (
-          //         <div className="text-center text-2xl font-semibold text-green-500">
-          //           Welcome to Locations
-          //         </div>
-          //       ),
-          //     },
-          //     { path: "countries", element: <Countries /> },
-          //     // { path: "regions", element: <Regions /> }, 
-          //     { path: "cities", element: <Cities /> },  
-          //   ],
-          // },
-          // {
-          //   path: "venue",
-          //   children: [
-          //     {
-          //       index: true, // 👈 /dashboard/location
-          //       element:<VenueComponent/>
-          //       ,
-          //     },
-          //     { path: "facilities", element: <Facilities /> },
-             
-          //   ],
-          // },
+          { path: "report", element: <ReportLayout/>},
+
         ],
       },
     ],

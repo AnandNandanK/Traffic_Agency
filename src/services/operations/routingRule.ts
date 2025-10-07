@@ -27,7 +27,9 @@ export function createRoutingRule(formData:Routing) {
 
       if (response.data.statusCode === 201) {
         // ✅ Success case
-        // dispatch(getAllCountries());
+        dispatch(getAllRoutingList());
+        // dispatch(getDropdownCampaign());
+        // dispatch(getDropdownVendor());
         return true; // <--- return success
       }
 

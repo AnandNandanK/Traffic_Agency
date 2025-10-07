@@ -4,6 +4,7 @@ import agencyReducer from "../slices/agencySlice"
 import campaignReducer from "../slices/campaignSlice"
 import vendorReducer from "../slices/vendorSlice"
 import routingReducer from "../slices/routingRuleSlice"
+import reportReducer from "../slices/reportSlice"
 
 export const store = configureStore({
   
@@ -12,7 +13,8 @@ export const store = configureStore({
     agency:agencyReducer,
     campaign:campaignReducer,
     vendor:vendorReducer,
-    routing:routingReducer
+    routing:routingReducer,
+    report:reportReducer
   },
 });
 

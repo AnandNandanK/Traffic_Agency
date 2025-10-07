@@ -7,7 +7,6 @@ import type {
   AllVendorResponse,
   Vendor,
 } from "../../../../interfaces/vendorInterface";
-import Slider from "@mui/material/Slider";
 import ErrorPopup from "../../../../components/ErrorPopupPage";
 
 type InputField = {
@@ -242,19 +241,21 @@ export default function CreateVendor({
           {/* Slider */}
           <div className="mt-4">
             <label className="block text-sm font-medium text-slate-700 mb-2">
-              Notification Threshold
+              Daily Limit
             </label>
-            <Slider
+            <input
+              type="number"
               value={form.dailyLimit}
-              onChange={(_, value) =>
-                setForm((f) => ({
-                  ...f,
-                  dailyLimit: value as number,
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev, // keep all previous values
+                  dailyLimit: Number(e.target.value), // update only clickCount
                 }))
               }
-              aria-label="Notification Threshold"
-              valueLabelDisplay="auto"
+              placeholder="Etner Click Count"
+              className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
             />
+
           </div>
         </div>
 

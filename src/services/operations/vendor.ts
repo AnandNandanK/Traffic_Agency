@@ -11,10 +11,6 @@ const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
 
 
 
-
-
-
-
 export function createVendor(formData:Vendor) {
   return async (dispatch:AppDispatch): Promise<boolean> => {
     try {
@@ -31,7 +27,7 @@ export function createVendor(formData:Vendor) {
 
       if (response.data.statusCode === 201) {
         // ✅ Success case
-        // dispatch(getAllCountries());
+        dispatch(getAllVendor());
         return true; // <--- return success
       }
 
@@ -54,14 +50,14 @@ export function createVendor(formData:Vendor) {
 
 
 
-export function getAllVendor() {
+export function getAllVendor(page:number=0) {
   return async (dispatch: AppDispatch): Promise<boolean> => {
     try {
       // dispatch(setLoading(true));
 
       const response = await apiConnector<Common<AllVendorResponse[]>>({
         method: "GET",
-        url:`${BASE_URL}/api/v1/vendors/list`,
+        url:`${BASE_URL}/api/v1/vendors/list?page=${page}`,
         withCredentials: true,
       });
 

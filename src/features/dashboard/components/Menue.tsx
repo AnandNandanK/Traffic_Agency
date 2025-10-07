@@ -30,28 +30,15 @@ const sideData = [
       { key: "routingrule", title: "Routing Rule", path: "/dashboard/routing-rule", icon: <GrVirtualMachine size={20}/> },
     ],
   },
- 
-  // {
-  //   id: 5,
-  //   title: "Events",
-  //   submenu: [
-  //     { key: "events", title: "Events", path: "/dashboard/events", icon: <RiCalendarEventLine size={20}/> },
-  //   ],
-  // },
-  // {
-  //   id: 6,
-  //   title: "Shows",
-  //   submenu: [
-  //     { key: "shows", title: "Shows", path: "/dashboard/shows", icon: <RiSlideshow2Line size={20}/> },
-  //   ],
-  // },
-  // {
-  //   id: 7,
-  //   title: "Ticket-Category",
-  //   submenu: [
-  //     { key: "ticketcategory", title: "Ticket category", path: "/dashboard/ticket-category", icon: <IoTicketOutline size={20}/> },
-  //   ],
-  // },
+  
+  {
+    id: 4,
+    title: "Report",
+    submenu: [
+      { key: "report", title: "Traffic Report", path: "/dashboard/report", icon: <GrVirtualMachine size={20}/> },
+    ],
+  },
+
 ];
 
 export default function Menue() {

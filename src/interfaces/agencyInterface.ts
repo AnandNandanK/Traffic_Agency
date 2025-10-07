@@ -14,6 +14,7 @@ export interface CampaignResponse {
   notificationThreshold: number;
   totalVendorCallbackReceieved: string;
   totalTrafficCallbackSend: string;
+  url:string
 }
 
 

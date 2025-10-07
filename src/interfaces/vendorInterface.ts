@@ -30,4 +30,5 @@ export interface AllVendorResponse {
   hasLimit: boolean;
   createdAt: string; // ISO date string
   updatedAt: string; // ISO date string
+  url:string
 }

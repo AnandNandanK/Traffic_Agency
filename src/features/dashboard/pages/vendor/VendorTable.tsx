@@ -4,7 +4,7 @@ import { BiSolidEdit } from "react-icons/bi";
 import type { Dispatch } from "react";
 
 import CreateVendor from "./CreateVendor";
-import type { AllVendorResponse} from "../../../../interfaces/vendorInterface";
+import type { AllVendorResponse } from "../../../../interfaces/vendorInterface";
 
 export type CampaignData = {
   id: number;
@@ -12,7 +12,6 @@ export type CampaignData = {
   contactEmail: string;
   contactPhone: string;
 };
-
 
 const tableHead: { key: keyof AllVendorResponse; name: string }[] = [
   { key: "id", name: "Vendor Id" },
@@ -25,8 +24,8 @@ const tableHead: { key: keyof AllVendorResponse; name: string }[] = [
   { key: "dailyLimit", name: "Daily Limit" },
   { key: "isActive", name: "Active" },
   { key: "hasLimit", name: " Has Limit" },
+  { key: "url", name: "Call Back Url " },
 ];
-
 
 type TableProps = {
   popUp: Dispatch<SetStateAction<boolean>>;
@@ -34,32 +33,27 @@ type TableProps = {
   context: string;
 };
 
-
 export default function VendorTable({
   popUp,
   setContext,
   context,
 }: TableProps) {
-
   const vendor = useAppSelector((state) => state.vendor.data?.list || []);
 
-  console.log("Store Data..",vendor);
+  console.log("Store Data..", vendor);
 
   const [vnedorData, setVendorData] = useState<AllVendorResponse | null>(null);
 
   console.log("CampaignData", vnedorData);
 
-
-  const CampaignHandler = (id: number,vendor : AllVendorResponse) => {
+  const CampaignHandler = (id: number, vendor: AllVendorResponse) => {
     setVendorData(vendor);
     setContext("Edit");
     console.log("Vendor ID..", id);
   };
 
-
   return (
     <div className="overflow-x-auto max-h-[calc(100vh-220px)] min-h-[calc(100vh-220px)] rounded-sm border-7 border-blue-950 ">
-     
       {vnedorData ? (
         <CreateVendor
           setVendorData={setVendorData}
@@ -87,7 +81,6 @@ export default function VendorTable({
                 </th>
               );
             })}
-        
           </tr>
         </thead>
 
@@ -100,7 +93,11 @@ export default function VendorTable({
               }`}
             >
               {/* Edit button */}
-              <td className={`py-2 px-4 border-b border-gray-300 text-center  ${vendor.id % 2 === 0 ? "bg-gray-50" : "bg-gray-100"}`}>
+              <td
+                className={`py-2 px-4 border-b border-gray-300 text-center  ${
+                  vendor.id % 2 === 0 ? "bg-gray-50" : "bg-gray-100"
+                }`}
+              >
                 <span
                   onClick={() => CampaignHandler(vendor.id, vendor)}
                   className=" flex justify-center items-center gap-1 hover:cursor-pointer text-blue-500"
@@ -119,20 +116,19 @@ export default function VendorTable({
                     ? `${vendor.requiredParams.clickIdKey} | ${JSON.stringify(
                         vendor.requiredParams.additionalParams
                       )}`
+                    : item.key === "isActive" || item.key === "hasLimit"
+                    ? vendor[item.key]
+                      ? "True"
+                      : "False"
                     : item.key in vendor
-                    ? (vendor[item.key as keyof AllVendorResponse] as
-                        | string
-                        | number
-                        | boolean)
+                    ? String(vendor[item.key as keyof AllVendorResponse])
                     : null}
                 </td>
               ))}
             </tr>
           ))}
 
-          <tr>
-            
-          </tr>
+          
         </tbody>
       </table>
     </div>
