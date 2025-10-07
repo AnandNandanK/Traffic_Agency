@@ -5,6 +5,7 @@ import { FaChalkboardUser } from "react-icons/fa6";
 import { GrVirtualMachine } from "react-icons/gr";
 import { NavLink } from "react-router-dom";
 import { ImTrello } from "react-icons/im";
+import { TbReport } from "react-icons/tb";
 
 const sideData = [
   {
@@ -35,7 +36,7 @@ const sideData = [
     id: 4,
     title: "Report",
     submenu: [
-      { key: "report", title: "Traffic Report", path: "/dashboard/report", icon: <GrVirtualMachine size={20}/> },
+      { key: "report", title: "Traffic Report", path: "/dashboard/report", icon: <TbReport  size={20}/> },
     ],
   },
 

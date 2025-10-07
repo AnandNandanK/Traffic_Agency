@@ -31,7 +31,7 @@ export default function ReportTable() {
   console.log("Store Data..", reports);
 
   return (
-    <div className="overflow-x-auto max-h-[calc(100vh-220px)] min-h-[calc(100vh-220px)] rounded-sm border-7 border-blue-950 ">
+    <div className="overflow-x-auto max-h-[calc(100vh-150px)] min-h-[calc(100vh-150px)] rounded-sm border-7 border-blue-950 ">
 
 
       <table className="min-w-full overflow-y-auto">
