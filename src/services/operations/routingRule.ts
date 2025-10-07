@@ -136,7 +136,7 @@ export function getAllRoutingList(campaingId:number=0,vendorId:number=0,page:num
 
       const response = await apiConnector<Common<AllRoutingResponse[]>>({
         method: "GET",
-        url:`${BASE_URL}/api/v1/routingrules/list?campaignId=${campaingId}/&vendorId=${vendorId}/&page=${page}`,
+        url:`${BASE_URL}/api/v1/routingrules/list?campaignId=${campaingId}&vendorId=${vendorId}&page=${page}`,
         withCredentials: true,
       });
 

@@ -16,6 +16,7 @@ export type CampaignData = {
 
 const tableHead: { key: keyof AllVendorResponse; name: string }[] = [
   { key: "id", name: "Vendor Id" },
+  { key: "secretKey", name: "Secret Key" },
   { key: "redirectionUrl", name: "Redirection Url" },
   { key: "name", name: "Name" },
   { key: "contactEmail", name: "Contact Email" },
