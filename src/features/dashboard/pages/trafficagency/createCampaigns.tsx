@@ -1,6 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
 import React, { useEffect, useState } from "react";
-import Slider from "@mui/material/Slider";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import { MdOutlineArrowDropDownCircle } from "react-icons/md";
 import {
@@ -61,7 +60,7 @@ export default function CreateCampaigns({
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<string>("Select an agency");
 
-  const agency = useAppSelector((state) => state.agency.data || []);
+  const agency = useAppSelector((state) => state.agency.data?.list || []);
 
   const { loading } = useAppSelector((state) => state.agency);
 
@@ -79,7 +78,7 @@ export default function CreateCampaigns({
         value: "",
       },
     },
-    notificationThreshold: 50,
+    notificationThreshold: 0,
   });
 
   const handleChange = (
@@ -318,16 +317,17 @@ export default function CreateCampaigns({
             <label className="block text-sm font-medium text-slate-700 mb-2">
               Notification Threshold
             </label>
-            <Slider
-              value={form.notificationThreshold}
-              onChange={(_, value) =>
-                setForm((f) => ({
-                  ...f,
-                  notificationThreshold: value as number,
+            <input
+              type="number"
+              value={form?.notificationThreshold}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev, // keep all previous values
+                  notificationThreshold: Number(e.target.value), // update only clickCount
                 }))
               }
-              aria-label="Notification Threshold"
-              valueLabelDisplay="auto"
+              placeholder="Etner Click Count"
+              className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
             />
           </div>
         </div>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { AppDispatch } from "../../store/store";
 import { apiConnector } from "../apiConnetor";
-import type { Common } from "../../interfaces/commonInterface";
+import type { Common} from "../../interfaces/commonInterface";
 import { setErrorMsaage, setLoading } from "../../slices/userSlice";
 import { setAgency, setAgencyLoading, type AllAgencyResponse } from "../../slices/agencySlice";
 import type { Campaigns } from "../../features/dashboard/pages/trafficagency/createCampaigns";
@@ -15,7 +15,6 @@ export type CreateAgencyProps={
     contactEmail: string,
     contactPhone: string,
 }
-
 
 
 export function CreateAgency(formData: CreateAgencyProps) {
@@ -59,18 +58,19 @@ export function CreateAgency(formData: CreateAgencyProps) {
 
 
 
-export function getAllAgency() {
+
+export function getAllAgency(page?:number) {
   return async (dispatch: AppDispatch): Promise<boolean> => {
     try {
       dispatch(setLoading(true));
 
       const response = await apiConnector<Common<AllAgencyResponse[]>>({
         method: "GET",
-        url:`${BASE_URL}/api/v1/trafficagencies/list`,
+        url:`${BASE_URL}/api/v1/trafficagencies/list?page=${page}`,
         withCredentials: true,
       });
 
-      console.log("CREATE AGENCY RESPONSE:", response.data);
+      console.log("ALL AGENCY RESPONSE:", response.data);
 
       if (response.data.statusCode === 200) {
         // ✅ Success case
@@ -103,6 +103,7 @@ export interface urlParamsResponse{
     [key: string]: string | undefined
   };
 }
+
 
 export function CreateCampaign(formData: Campaigns<urlParamsResponse>) {
   return async (dispatch:AppDispatch): Promise<boolean> => {
@@ -146,14 +147,18 @@ export function CreateCampaign(formData: Campaigns<urlParamsResponse>) {
 
 
 
-export function getAllCampaign() {
+
+export function getAllCampaign(params?:number | undefined,page?:number) {
   return async (dispatch: AppDispatch): Promise<boolean> => {
     try {
       dispatch(setLoading(true));
 
+      
+      console.log(`${BASE_URL}/api/v1/trafficagencies/campaigns/list?agencyId=${params}&page=${page}`);
+
       const response = await apiConnector<Common<CampaignResponse[]>>({
         method: "GET",
-        url:`${BASE_URL}/api/v1/trafficagencies/campaigns/list`,
+        url:`${BASE_URL}/api/v1/trafficagencies/campaigns/list?agencyId=${params}&page=${page}`,
         withCredentials: true,
       });
 

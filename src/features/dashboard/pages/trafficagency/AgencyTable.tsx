@@ -1,6 +1,6 @@
-import { useEffect, useState, type SetStateAction } from "react";
-import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
-import { getAllAgency } from "../../../../services/operations/agency";
+import { useState, type SetStateAction } from "react";
+import {  useAppSelector } from "../../../../store/hooks";
+
 import { BiSolidEdit } from "react-icons/bi";
 import type { Dispatch } from "react";
 import AgencyCUpage from "./createAgencyPage";
@@ -42,17 +42,14 @@ export default function AgencyTable({
   setContext,
   context,
 }: TableProps) {
-  const dispatch = useAppDispatch();
 
-  const agency = useAppSelector((state) => state.agency.data || []);
+
+  const agency = useAppSelector((state) => state.agency.data?.list || []);
   // console.log("Store Data..",agency);
 
   const [agencyData, setAgencyData] = useState<AgencyData | null>(null);
   console.log("AgencyData", agencyData);
 
-  useEffect(() => {
-    dispatch(getAllAgency());
-  }, [dispatch]);
 
   const agencyHandler = (id: number, agency: AgencyData) => {
     setAgencyData(agency);
@@ -61,7 +58,7 @@ export default function AgencyTable({
   };
 
   return (
-    <div className="overflow-x-auto  rounded-sm ">
+    <div className="overflow-x-auto  rounded-sm max-h-[calc(100vh-220px)] min-h-[calc(100vh-220px)] border-7 border-blue-950 ">
       {agencyData ? (
         <AgencyCUpage
           setAgencyData={setAgencyData}
@@ -71,7 +68,7 @@ export default function AgencyTable({
           context={context}
         />
       ) : null}
-      <table className="min-w-full border-7 border-blue-950 overflow-y-auto">
+      <table className="min-w-full overflow-y-auto">
         <thead className="bg-blue-950 text-white text-sm ">
           <tr>
             <th className="py-2 px-4 border-b border-gray-300 text-center">
@@ -92,7 +89,7 @@ export default function AgencyTable({
         </thead>
 
         <tbody>
-          {agency.map((agency) => (
+          {agency?.map((agency) => (
             <tr
               key={agency.id}
               className={`hover:bg-gray-300 ${

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { DropDown } from "../services/operations/routingRule";
-
+import type { PageData } from "../interfaces/commonInterface";
 
 
 export interface AllAgencyResponse {
@@ -14,7 +14,7 @@ export interface AllAgencyResponse {
 
 // State ka type
 interface UserState {
-  data: AllAgencyResponse[] | null;
+  data: PageData<AllAgencyResponse[]> | null;
   dropDown:DropDown[] | null;
   errorMassage:string | null;
   loading:boolean
@@ -34,7 +34,7 @@ const AgencySlice = createSlice({
   name: "agency",
   initialState,
   reducers: {
-    setAgency(state, action: PayloadAction<AllAgencyResponse[]>) {
+    setAgency(state, action: PayloadAction<PageData<AllAgencyResponse[]>>) {
       state.data = action.payload;
     },
     setDropdownAgency(state, action: PayloadAction<DropDown[]>) {

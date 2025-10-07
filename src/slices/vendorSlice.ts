@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { Vendor } from "../interfaces/vendorInterface";
+import type { AllVendorResponse } from "../interfaces/vendorInterface";
 import type { DropDown } from "../services/operations/routingRule";
+import type { PageData } from "../interfaces/commonInterface";
 
 
 // State ka type
 interface VendorState {
-  vendor: Vendor | null;
+  data: PageData<AllVendorResponse[]> | null;
   dropDown:DropDown[] | null
   errorMassage:string | null;
   loading:boolean
@@ -15,7 +16,7 @@ interface VendorState {
 
 // Initial state
 const initialState: VendorState = {
-  vendor: null,
+  data: null,
   dropDown:null,
   errorMassage:null,
   loading:false
@@ -28,8 +29,8 @@ const VendorSlice = createSlice({
   name: "vendor",
   initialState,
   reducers: {
-    setVendor(state, action: PayloadAction<Vendor>) {
-      state.vendor = action.payload;
+    setVendor(state, action: PayloadAction<PageData<AllVendorResponse[]>>) {
+      state.data = action.payload;
     },
     setDropdownVendor(state, action: PayloadAction<DropDown[]>) {
       state.dropDown = action.payload;
@@ -42,7 +43,7 @@ const VendorSlice = createSlice({
     },
 
     clearVendor(state) {
-      state.vendor = null;
+      state.data = null;
     },
   },
 });

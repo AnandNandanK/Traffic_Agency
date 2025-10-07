@@ -11,8 +11,8 @@ const sideData = [
     id: 1,
     title: "Traffic Agency",
     submenu: [
-      { key: "createagency", title: "Create Agency", path: "/dashboard/createagency", icon: <ImTrello  /> },
-      { key: "createcampaigns", title: "Create campaigns", path: "/dashboard/agencycampaigns", icon: <LiaCitySolid /> },
+      { key: "createagency", title: "Agency", path: "/dashboard/createagency", icon: <ImTrello  /> },
+      { key: "createcampaigns", title: "Campaigns", path: "/dashboard/agencycampaigns", icon: <LiaCitySolid /> },
       // { key: "city", title: "Cities", path: "/dashboard/location/cities", icon: <GiModernCity /> },
     ],
   },

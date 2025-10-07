@@ -3,10 +3,12 @@ import React, { useEffect, useState, type SetStateAction } from "react";
 
 import { useAppDispatch } from "../../../../store/hooks";
 import { createVendor } from "../../../../services/operations/vendor";
-import type { Vendor } from "../../../../interfaces/vendorInterface";
+import type {
+  AllVendorResponse,
+  Vendor,
+} from "../../../../interfaces/vendorInterface";
 import Slider from "@mui/material/Slider";
 import ErrorPopup from "../../../../components/ErrorPopupPage";
-
 
 type InputField = {
   key: keyof Vendor;
@@ -14,33 +16,34 @@ type InputField = {
   placeholder: string;
 };
 
-
 const inputData: InputField[] = [
   { key: "name", name: "Name", placeholder: "Enter Name" },
-  { key: "redirectionUrl", name: "Redirection Url", placeholder: "Redirection Url" },
+  {
+    key: "redirectionUrl",
+    name: "Redirection Url",
+    placeholder: "Redirection Url",
+  },
   { key: "contactEmail", name: "Contact Email", placeholder: "Contact Email" },
   { key: "contactPhone", name: "Contact Phone", placeholder: "Contact Phone" },
 ];
 
-
 interface VendorCardProps {
+  setVendorData?: Dispatch<SetStateAction<AllVendorResponse | null>>;
+  vendorData?: AllVendorResponse;
   popUp?: Dispatch<SetStateAction<boolean>>;
   context: string;
   setContext: Dispatch<SetStateAction<string>>;
 }
 
-
 //...........................................TSX Start.................................................
 export default function CreateVendor({
+  setVendorData,
+  vendorData,
   popUp,
   context,
   setContext,
 }: VendorCardProps) {
   const dispatch = useAppDispatch();
-
-
-
-  
 
   const [form, setForm] = useState<Vendor>({
     name: "",
@@ -53,38 +56,34 @@ export default function CreateVendor({
         key: "",
       },
     },
-    dailyLimit: 0, 
+    dailyLimit: 0,
   });
 
 
-
-const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  setForm({
-    ...form,                        // keep previous values
-    [e.target.name]: e.target.value // update the field being edited
-  });
-};
-
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({
+      ...form, // keep previous values
+      [e.target.name]: e.target.value, // update the field being edited
+    });
+  };
 
   console.log(context);
 
-
-
-const formData: Vendor = {
-  name: form.name,
-  redirectionUrl: form.redirectionUrl,
-  contactEmail: form.contactEmail,
-  contactPhone: form.contactPhone,
-  dailyLimit: form.dailyLimit,
-  urlParams: {
-    clickIdKey: form.urlParams?.clickIdKey || "",  // ✅ default to empty string
-    additionalParams: {
-      [form.urlParams?.additionalParams?.key as string]:
-        form.urlParams?.additionalParams?.value || "", // default empty string
+  
+  const formData: Vendor = {
+    name: form.name,
+    redirectionUrl: form.redirectionUrl,
+    contactEmail: form.contactEmail,
+    contactPhone: form.contactPhone,
+    dailyLimit: form.dailyLimit,
+    urlParams: {
+      clickIdKey: form.urlParams?.clickIdKey || "", // ✅ default to empty string
+      additionalParams: {
+        [form.urlParams?.additionalParams?.key as string]:
+          form.urlParams?.additionalParams?.value || "", // default empty string
+      },
     },
-  },
-};
-
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,19 +100,37 @@ const formData: Vendor = {
   };
 
 
+
   useEffect(() => {
+    
+   const [firstKey, firstValue] =
+  Object.entries(vendorData?.requiredParams?.additionalParams ?? {})[0] || ["", ""];
+
     if (context === "Edit") {
+      setForm({
+        name: vendorData?.name ?? "",
+        redirectionUrl: vendorData?.redirectionUrl ?? "",
+        contactEmail: vendorData?.contactEmail ?? "",
+        contactPhone: vendorData?.contactPhone ?? "",
+        urlParams: {
+          clickIdKey: vendorData?.requiredParams.clickIdKey,
+          additionalParams: {
+            key: firstKey,
+            value:firstValue
+          },
+        },
+        dailyLimit: 0,
+      });
       //   dispatch(getVendorById(VendorId));
     }
-  }, [context, dispatch]);
-
+  }, [context, dispatch, vendorData]);
 
   return (
     <div
       className="min-h-screen inset-0 fixed  bg-black/40 p-6 z-50 
             flex items-center justify-center"
     >
-      <ErrorPopup/>
+      <ErrorPopup />
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-lg p-6 sm:p-8"
@@ -128,35 +145,30 @@ const formData: Vendor = {
 
         <div className="space-y-2">
           {/* Vendor Name */}
-        
-            {
-              inputData.map((item)=>{
-                return (
-                    <div key={item.key}>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                      {item.name}
-                    </label>
 
-                    <input
-                      type="text"
-                      required={true}
-                      name={item.key}
-                     value={(form[item.key] as string | number) ?? ""}
-                      onChange={(e) => handleChange(e)}
-                      placeholder={item.placeholder}
-                      //   onFocus={() => dispatch(setVendorError(null))}
-                      className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 
+          {inputData.map((item) => {
+            return (
+              <div key={item.key}>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  {item.name}
+                </label>
+
+                <input
+                  type="text"
+                  required={true}
+                  name={item.key}
+                  value={(form[item.key] as string | number) ?? ""}
+                  onChange={(e) => handleChange(e)}
+                  placeholder={item.placeholder}
+                  //   onFocus={() => dispatch(setVendorError(null))}
+                  className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 
                               border-slate-200 focus:ring-sky-400"
-                    />
-                 </div>
+                />
+              </div>
+            );
+          })}
 
-                )
-              })
-            }
-
-
-
-             {/* Url Params Section */}
+          {/* Url Params Section */}
           <div className="p-3 border-slate-200 border-4 rounded-2xl space-y-3.5">
             <label className="block text-sm font-medium text-black mb-2 text-center uppercase">
               Url Params
@@ -179,7 +191,6 @@ const formData: Vendor = {
                 className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
               />
             </div>
-
 
             {/* Additional Params */}
             <div>
@@ -228,7 +239,6 @@ const formData: Vendor = {
             </div>
           </div>
 
-
           {/* Slider */}
           <div className="mt-4">
             <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -246,9 +256,8 @@ const formData: Vendor = {
               valueLabelDisplay="auto"
             />
           </div>
-
         </div>
-      
+
         {/* Action buttons */}
         <div className="mt-8 flex items-center justify-end gap-4">
           <button
@@ -256,7 +265,7 @@ const formData: Vendor = {
             onClick={() => {
               popUp?.(false);
               setContext("");
-              //   dispatch(setVendorError(null));
+              setVendorData?.(null);
               //   dispatch(setSingleVendor(null));
             }}
             className="px-6 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 font-medium hover:bg-slate-50"

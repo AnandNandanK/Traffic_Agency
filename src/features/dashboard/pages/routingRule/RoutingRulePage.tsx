@@ -1,19 +1,24 @@
 import type { Dispatch } from "react";
-import React, { useState, type SetStateAction } from "react";
+import React, { useEffect, useState, type SetStateAction } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import { ImSpinner3 } from "react-icons/im";
 import type { Routing } from "../../../../interfaces/routingRuleInterface";
 import { MdOutlineArrowDropDownCircle } from "react-icons/md";
 import { createRoutingRule } from "../../../../services/operations/routingRule";
 import ErrorPopup from "../../../../components/ErrorPopupPage";
+import type { AllRoutingResponse } from "../../../../slices/routingRuleSlice";
 
 interface AgencyCardProps {
+  setRoutingData?: Dispatch<SetStateAction<AllRoutingResponse | null>>;
+  routingData?: AllRoutingResponse;
   popUp?: Dispatch<SetStateAction<boolean>>;
   context: string;
   setContext: Dispatch<SetStateAction<string>>;
 }
 
 export default function RoutingRulePage({
+  setRoutingData,
+  routingData,
   popUp,
   context,
   setContext,
@@ -33,7 +38,6 @@ export default function RoutingRulePage({
     useState<string>("Select an Campaign");
   const [selectedVendor, setSelectedVendor] =
     useState<string>("Select an Vendor");
-
 
   const [form, setForm] = useState<Routing>({
     campaignId: 0,
@@ -61,22 +65,32 @@ export default function RoutingRulePage({
   };
 
   function cancelHandler() {
-    console.log("Clicked in Cancel and context is: ", context);
-
     if (context === "Create") {
       popUp?.(false);
     }
-
-    //   setAgencyData?.(null);
+    console.log("Clicked in Cancel and context is: ", context);
+    setRoutingData?.(null);
     setContext("");
   }
+
+  useEffect(() => {
+    if (context === "Edit") {
+      setForm({
+        campaignId: routingData?.campaignId ?? Number(0),
+        vendorId: routingData?.vendorId ?? Number(0),
+        clickCount: routingData?.nthClick,
+      });
+      setSelectedCampaign(routingData?.campaign?.name ?? "");
+      setSelectedVendor(routingData?.vendor?.name ?? "");
+    }
+  }, [form, routingData, context]);
 
   return (
     <div
       className="min-h-screen inset-0 fixed  bg-black/40 p-6 z-50 
             flex items-center justify-center "
     >
-      <ErrorPopup/>
+      <ErrorPopup />
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-lg p-6 sm:p-8"
@@ -94,11 +108,9 @@ export default function RoutingRulePage({
 
           {/* Dropdown */}
           <div className="w-full relative">
-            {context === "Edit" ? (
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Select Campaign
-              </label>
-            ) : null}
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Select Campaign
+            </label>
 
             <button
               onClick={() => setOpen(!open)}
@@ -138,11 +150,9 @@ export default function RoutingRulePage({
           {/* ....................................AGENCY................................... */}
 
           <div className="relative">
-            {context === "Edit" ? (
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Select Agency
-              </label>
-            ) : null}
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Select Agency
+            </label>
 
             <button
               onClick={() => setOpenAgency(!openAgency)}
@@ -159,7 +169,7 @@ export default function RoutingRulePage({
 
             {openAgency && (
               <ul className="absolute mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg z-10 animate-fadeIn">
-                {vendorDropdown .map((option, index) => (
+                {vendorDropdown.map((option, index) => (
                   <li
                     key={index}
                     onClick={() => {

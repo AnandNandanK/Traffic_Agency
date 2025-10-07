@@ -1,11 +1,12 @@
 import axios from "axios";
-import {type Common } from "../../interfaces/commonInterface";
+import {type Common, type WithoutPagination } from "../../interfaces/commonInterface";
 import { apiConnector } from "../apiConnetor";
 import type { AppDispatch } from "../../store/store";
 import { setDropdownCampaign } from "../../slices/campaignSlice";
 import type { Routing } from "../../interfaces/routingRuleInterface";
 import { setDropdownVendor } from "../../slices/vendorSlice";
 import { setErrorMsaage } from "../../slices/userSlice";
+import { setRouting, type AllRoutingResponse } from "../../slices/routingRuleSlice";
 const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
 
 
@@ -46,7 +47,6 @@ export function createRoutingRule(formData:Routing) {
 }
 
 
-
 export type DropDown = {
     id:number,
     name:string
@@ -59,7 +59,7 @@ export function getDropdownCampaign() {
     try {
     //   dispatch(setLoading(true));
 
-      const response = await apiConnector<Common<DropDown[]>>({
+      const response = await apiConnector<WithoutPagination<DropDown[]>>({
         method: "GET",
         url:`${BASE_URL}/api/v1/trafficagencies/campaigns/dropdown`,
         withCredentials: true,
@@ -96,7 +96,7 @@ export function getDropdownVendor() {
     try {
     //   dispatch(setLoading(true));
 
-      const response = await apiConnector<Common<DropDown[]>>({
+      const response = await apiConnector<WithoutPagination<DropDown[]>>({
         method: "GET",
         url:`${BASE_URL}/api/v1/vendors/dropdown`,
         withCredentials: true,
@@ -128,37 +128,38 @@ export function getDropdownVendor() {
 }
 
 
-// export function getDropdownAgency() {
-//   return async (dispatch:AppDispatch): Promise<boolean> => {
-//     try {
-//     //   dispatch(setLoading(true));
 
-//       const response = await apiConnector<Common<DropDown[]>>({
-//         method: "GET",
-//         url:`${BASE_URL}/api/v1/trafficagencies/dropdown`,
-//         withCredentials: true,
-//       });
+export function getAllRoutingList(campaingId:number=0,vendorId:number=0,page:number=0) {
+  return async (dispatch:AppDispatch): Promise<boolean> => {
+    try {
+    //   dispatch(setLoading(true));
 
-//       console.log("GET ALL AGENCY RESPONSE:", response.data);
+      const response = await apiConnector<Common<AllRoutingResponse[]>>({
+        method: "GET",
+        url:`${BASE_URL}/api/v1/routingrules/list?campaignId=${campaingId}/&vendorId=${vendorId}/&page=${page}`,
+        withCredentials: true,
+      });
 
-//       if (response.data.statusCode === 200) {
-//         // ✅ Success case
-//         dispatch(setDropdownAgency(response.data.data));
-//         return true; // <--- return success
-//       }
+      console.log("GET ALL ROUTING RESPONSE:", response.data);
 
-//       return false; // if not scuccess
+      if (response.data.statusCode === 200) {
+        // ✅ Success case
+        dispatch(setRouting(response.data.data));
+        return true; // <--- return success
+      }
 
-//     } catch (error) {
-//       if (axios.isAxiosError(error)) {
+      return false; // if not scuccess
+
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
      
-//         console.error("Axios error:", error.response?.data);
-//       } else {
-//         console.error("Unknown error:", error);
-//       }
-//       return false; // <--- failure case
-//     } finally {
-//     //   dispatch(setLoading(false));
-//     }
-//   };
-// }
+        console.error("Axios error:", error.response?.data);
+      } else {
+        console.error("Unknown error:", error);
+      }
+      return false; // <--- failure case
+    } finally {
+    //   dispatch(setLoading(false));
+    }
+  };
+}
