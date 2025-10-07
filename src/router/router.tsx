@@ -1,5 +1,4 @@
 // router.tsx
-
 import { createBrowserRouter, Navigate } from "react-router";
 import OpenRoute from "./openRoute";
 import Login from "../features/auth/login";
@@ -9,12 +8,11 @@ import CreateAgency from "../features/dashboard/pages/trafficagency/layout/creat
 import CampaignLayout from "../features/dashboard/pages/trafficagency/layout/CampaignLayout";
 import CreateVendorLayout from "../features/dashboard/pages/vendor/vendorLayout/CreateVendorLayout";
 import RoutingRuleLayout from "../features/dashboard/pages/routingRule/layout/RoutingLayout";
-import ReportLayout from "../features/dashboard/pages/report/layout/reportLayout";
+import ReportLayout from "../features/dashboard/pages/report/layout/ReportLayout";
+
 
  
-
 export const router = createBrowserRouter([
-
 
   { path: "/", element: <Navigate to="/login" replace /> },
   {
