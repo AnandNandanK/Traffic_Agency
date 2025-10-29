@@ -1,9 +1,11 @@
-import axios, {
+import {
   type AxiosRequestConfig,
   type AxiosResponse,
   type Method,
 } from "axios";
-export const axiosInstance = axios.create({});
+
+
+import { axiosInstance } from "./axiosInstance";
 
 // Type for connector params
 type Connection<TData = unknown, TParams = Record<string, unknown>> = {

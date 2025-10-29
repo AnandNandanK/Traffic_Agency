@@ -55,7 +55,7 @@ export default function CreateVendor({
         key: "",
       },
     },
-    dailyLimit: 0,
+    // dailyLimit: 0,
   });
 
 
@@ -74,7 +74,7 @@ export default function CreateVendor({
     redirectionUrl: form.redirectionUrl,
     contactEmail: form.contactEmail,
     contactPhone: form.contactPhone,
-    dailyLimit: form.dailyLimit,
+    // dailyLimit: form.dailyLimit,
     urlParams: {
       clickIdKey: form.urlParams?.clickIdKey || "", // ✅ default to empty string
       additionalParams: {
@@ -118,7 +118,7 @@ export default function CreateVendor({
             value:firstValue
           },
         },
-        dailyLimit: 0,
+        // dailyLimit: 0,
       });
       //   dispatch(getVendorById(VendorId));
     }
@@ -239,7 +239,7 @@ export default function CreateVendor({
           </div>
 
           {/* Slider */}
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <label className="block text-sm font-medium text-slate-700 mb-2">
               Daily Limit
             </label>
@@ -256,7 +256,7 @@ export default function CreateVendor({
               className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
             />
 
-          </div>
+          </div> */}
         </div>
 
         {/* Action buttons */}

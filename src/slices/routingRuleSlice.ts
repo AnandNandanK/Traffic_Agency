@@ -11,6 +11,7 @@ export interface AllRoutingResponse {
     nthClick: number,
     isActive: true,
     isDefault: boolean,
+    capacity:number,
     campaign: {
         name: string
     },

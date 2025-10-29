@@ -20,6 +20,7 @@ const tableHead: { key: keyof AllRoutingResponse; name: string }[] = [
   { key: "nthClick", name: "Nth Click" },
   { key: "isActive", name: "Active" },
   { key: "isDefault", name: "Default" },
+  { key: "capacity", name: "Capacity" },
   { key: "campaign", name: "Campaign Name" },
   { key: "vendor", name: "Vendor Name" },
 ];

@@ -37,6 +37,7 @@ const sideData = [
     title: "Report",
     submenu: [
       { key: "report", title: "Traffic Report", path: "/dashboard/report", icon: <TbReport  size={20}/> },
+      { key: "countreport", title: "Count Report", path: "/dashboard/count-report", icon: <TbReport  size={20}/> },
     ],
   },
 

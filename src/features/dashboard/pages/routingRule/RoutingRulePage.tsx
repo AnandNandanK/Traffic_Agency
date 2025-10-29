@@ -32,24 +32,23 @@ export default function RoutingRulePage({
   const campaignDropdown = useAppSelector(
     (state) => state.campaign.dropDown || []
   );
-  const vendorDropdown = useAppSelector((state) => state.vendor.dropDown || []);
+  const vendorDropdown = useAppSelector(
+    (state) => state.vendor.dropDown || []
+  );
 
   const [selectedCampaign, setSelectedCampaign] =
-    useState<string>("Select an Campaign");
+    useState<string>("Select a Campaign");
   const [selectedVendor, setSelectedVendor] =
-    useState<string>("Select an Vendor");
+    useState<string>("Select a Vendor");
 
   const [form, setForm] = useState<Routing>({
     campaignId: 0,
     vendorId: 0,
     clickCount: undefined,
+    capacity: undefined,
   });
 
-  console.log(context);
-
-  const formData = {
-    ...form,
-  };
+  const formData = { ...form };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,8 +58,6 @@ export default function RoutingRulePage({
       if (res) {
         popUp?.(false);
       }
-      console.log(form);
-      console.log(context);
     }
   };
 
@@ -68,7 +65,6 @@ export default function RoutingRulePage({
     if (context === "Create") {
       popUp?.(false);
     }
-    console.log("Clicked in Cancel and context is: ", context);
     setRoutingData?.(null);
     setContext("");
   }
@@ -76,19 +72,19 @@ export default function RoutingRulePage({
   useEffect(() => {
     if (context === "Edit") {
       setForm({
-        campaignId: routingData?.campaignId ?? Number(0),
-        vendorId: routingData?.vendorId ?? Number(0),
+        campaignId: routingData?.campaignId ?? 0,
+        vendorId: routingData?.vendorId ?? 0,
         clickCount: routingData?.nthClick,
+        capacity: routingData?.capacity ?? undefined,
       });
       setSelectedCampaign(routingData?.campaign?.name ?? "");
       setSelectedVendor(routingData?.vendor?.name ?? "");
     }
-  }, [form, routingData, context]);
+  }, [routingData, context]);
 
   return (
     <div
-      className="min-h-screen inset-0 fixed  bg-black/40 p-6 z-50 
-            flex items-center justify-center "
+      className="min-h-screen inset-0 fixed bg-black/40 p-6 z-50 flex items-center justify-center"
     >
       <ErrorPopup />
       <form
@@ -105,8 +101,6 @@ export default function RoutingRulePage({
 
         <div className="space-y-2">
           {/* ....................................CAMPAIGN.................................. */}
-
-          {/* Dropdown */}
           <div className="w-full relative">
             <label className="block text-sm font-medium text-slate-700 mb-2">
               Select Campaign
@@ -148,7 +142,6 @@ export default function RoutingRulePage({
           </div>
 
           {/* ....................................AGENCY................................... */}
-
           <div className="relative">
             <label className="block text-sm font-medium text-slate-700 mb-2">
               Select Agency
@@ -189,7 +182,7 @@ export default function RoutingRulePage({
             )}
           </div>
 
-          {/* Slider */}
+          {/* Click Count */}
           <div className="mt-4">
             <label className="block text-sm font-medium text-slate-700 mb-2">
               Click Count
@@ -197,14 +190,34 @@ export default function RoutingRulePage({
 
             <input
               type="number"
-              value={form.clickCount}
+              value={form.clickCount ?? ""}
               onChange={(e) =>
                 setForm((prev) => ({
-                  ...prev, // keep all previous values
-                  clickCount: Number(e.target.value), // update only clickCount
+                  ...prev,
+                  clickCount: Number(e.target.value),
                 }))
               }
-              placeholder="Etner Click Count"
+              placeholder="Enter Click Count"
+              className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
+            />
+          </div>
+
+          {/* Capacity */}
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Capacity
+            </label>
+
+            <input
+              type="number"
+              value={form.capacity ?? ""}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  capacity: Number(e.target.value),
+                }))
+              }
+              placeholder="Enter Capacity"
               className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
             />
           </div>
@@ -223,7 +236,7 @@ export default function RoutingRulePage({
           <button
             disabled={loading}
             type="submit"
-            className="h-10 w-3/12  rounded-lg bg-sky-700 text-white font-semibold shadow hover:bg-sky-800 flex justify-center items-center"
+            className="h-10 w-3/12 rounded-lg bg-sky-700 text-white font-semibold shadow hover:bg-sky-800 flex justify-center items-center"
           >
             {loading ? <ImSpinner3 className="animate-spin" /> : "Save"}
           </button>

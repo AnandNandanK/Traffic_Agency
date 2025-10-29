@@ -9,6 +9,7 @@ import CampaignLayout from "../features/dashboard/pages/trafficagency/layout/Cam
 import CreateVendorLayout from "../features/dashboard/pages/vendor/vendorLayout/CreateVendorLayout";
 import RoutingRuleLayout from "../features/dashboard/pages/routingRule/layout/RoutingLayout";
 import ReportLayout from "../features/dashboard/pages/report/layout/ReportLayout";
+import CountingRoute from "../features/dashboard/pages/routingRule/layout/RoutingCountLayout";
 
 
  
@@ -42,6 +43,7 @@ export const router = createBrowserRouter([
           { path: "vendor", element: <CreateVendorLayout />},
           { path: "routing-rule", element: <RoutingRuleLayout />},
           { path: "report", element: <ReportLayout/>},
+          { path: "count-report", element: <CountingRoute/>},
 
         ],
       },
