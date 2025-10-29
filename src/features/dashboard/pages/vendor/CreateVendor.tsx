@@ -1,6 +1,5 @@
-import type { Dispatch } from "react";
-import React, { useEffect, useState, type SetStateAction } from "react";
-
+import type { Dispatch, SetStateAction } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../../store/hooks";
 import { createVendor } from "../../../../services/operations/vendor";
 import type {
@@ -34,7 +33,6 @@ interface VendorCardProps {
   setContext: Dispatch<SetStateAction<string>>;
 }
 
-//...........................................TSX Start.................................................
 export default function CreateVendor({
   setVendorData,
   vendorData,
@@ -51,84 +49,101 @@ export default function CreateVendor({
     contactPhone: "",
     urlParams: {
       clickIdKey: "",
-      additionalParams: {
-        key: "",
-      },
+      additionalParams: [{ key: "", value: "" }],
     },
-    // dailyLimit: 0,
   });
 
-
+  // ✅ Handle basic input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
-      ...form, // keep previous values
-      [e.target.name]: e.target.value, // update the field being edited
+      ...form,
+      [e.target.name]: e.target.value,
     });
   };
 
-  console.log(context);
+  // ✅ Add new additional param safely
+  const handleAddParam = () => {
+    setForm((prev) => {
+      const currentParams = Array.isArray(prev.urlParams?.additionalParams)
+        ? prev.urlParams?.additionalParams
+        : []; // 👈 if it's an object, replace with empty array
 
-  
-  const formData: Vendor = {
-    name: form.name,
-    redirectionUrl: form.redirectionUrl,
-    contactEmail: form.contactEmail,
-    contactPhone: form.contactPhone,
-    // dailyLimit: form.dailyLimit,
-    urlParams: {
-      clickIdKey: form.urlParams?.clickIdKey || "", // ✅ default to empty string
-      additionalParams: {
-        [form.urlParams?.additionalParams?.key as string]:
-          form.urlParams?.additionalParams?.value || "", // default empty string
-      },
-    },
+      return {
+        ...prev,
+        urlParams: {
+          ...prev.urlParams,
+          additionalParams: [...currentParams, { key: "", value: "" }],
+        },
+      };
+    });
   };
 
+  const handleDeleteParam = (index: number) => {
+    setForm((prev) => {
+      const currentParams = Array.isArray(prev.urlParams?.additionalParams)
+        ? prev.urlParams.additionalParams
+        : []; // if it's an object, treat it as empty array
+
+      return {
+        ...prev,
+        urlParams: {
+          ...prev.urlParams,
+          additionalParams: currentParams.filter((_, i) => i !== index),
+        },
+      };
+    });
+  };
+
+  // ✅ Prepare and transform data before submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // ✅ Prepare and transform data before submit
+    const formData: Vendor = {
+      ...form,
+      urlParams: {
+        clickIdKey: form.urlParams?.clickIdKey || "",
+        additionalParams: Array.isArray(form.urlParams?.additionalParams)
+          ? form.urlParams.additionalParams.reduce((acc, { key, value }) => {
+              if (key) acc[key] = value || "";
+              return acc;
+            }, {} as Record<string, string>)
+          : form.urlParams?.additionalParams || {},
+      },
+    };
+
     if (context === "Create") {
       const res = await dispatch(createVendor(formData));
-
       if (res) {
         popUp?.(false);
       }
-
-      console.log(formData);
-      console.log(context);
     }
   };
 
-
-
+  // ✅ Fill form in Edit mode
   useEffect(() => {
-    
-   const [firstKey, firstValue] =
-  Object.entries(vendorData?.requiredParams?.additionalParams ?? {})[0] || ["", ""];
+    if (context === "Edit" && vendorData) {
+      const additionalParamsArray = vendorData?.requiredParams?.additionalParams
+        ? Object.entries(vendorData.requiredParams.additionalParams).map(
+            ([key, value]) => ({ key, value })
+          )
+        : [{ key: "", value: "" }];
 
-    if (context === "Edit") {
       setForm({
-        name: vendorData?.name ?? "",
-        redirectionUrl: vendorData?.redirectionUrl ?? "",
-        contactEmail: vendorData?.contactEmail ?? "",
-        contactPhone: vendorData?.contactPhone ?? "",
+        name: vendorData.name ?? "",
+        redirectionUrl: vendorData.redirectionUrl ?? "",
+        contactEmail: vendorData.contactEmail ?? "",
+        contactPhone: vendorData.contactPhone ?? "",
         urlParams: {
-          clickIdKey: vendorData?.requiredParams.clickIdKey,
-          additionalParams: {
-            key: firstKey,
-            value:firstValue
-          },
+          clickIdKey: vendorData.requiredParams?.clickIdKey || "",
+          additionalParams: additionalParamsArray,
         },
-        // dailyLimit: 0,
       });
-      //   dispatch(getVendorById(VendorId));
     }
-  }, [context, dispatch, vendorData]);
+  }, [context, vendorData]);
 
   return (
-    <div
-      className="min-h-screen inset-0 fixed  bg-black/40 p-6 z-50 
-            flex items-center justify-center"
-    >
+    <div className="min-h-screen inset-0 fixed bg-black/40 p-6 z-50 flex items-center justify-center">
       <ErrorPopup />
       <form
         onSubmit={handleSubmit}
@@ -142,32 +157,25 @@ export default function CreateVendor({
           {context === "Create" ? "Create Vendor" : "Update Vendor"}
         </h2>
 
+        {/* 🔹 Basic Fields */}
         <div className="space-y-2">
-          {/* Vendor Name */}
+          {inputData.map((item) => (
+            <div key={item.key}>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                {item.name}
+              </label>
+              <input
+                type="text"
+                name={item.key}
+                value={(form[item.key] as string | number) ?? ""}
+                onChange={handleChange}
+                placeholder={item.placeholder}
+                className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
+              />
+            </div>
+          ))}
 
-          {inputData.map((item) => {
-            return (
-              <div key={item.key}>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  {item.name}
-                </label>
-
-                <input
-                  type="text"
-                  required={true}
-                  name={item.key}
-                  value={(form[item.key] as string | number) ?? ""}
-                  onChange={(e) => handleChange(e)}
-                  placeholder={item.placeholder}
-                  //   onFocus={() => dispatch(setVendorError(null))}
-                  className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 
-                              border-slate-200 focus:ring-sky-400"
-                />
-              </div>
-            );
-          })}
-
-          {/* Url Params Section */}
+          {/* 🔹 Url Params */}
           <div className="p-3 border-slate-200 border-4 rounded-2xl space-y-3.5">
             <label className="block text-sm font-medium text-black mb-2 text-center uppercase">
               Url Params
@@ -180,7 +188,7 @@ export default function CreateVendor({
               </label>
               <input
                 type="text"
-                value={form?.urlParams?.clickIdKey}
+                value={form.urlParams?.clickIdKey || ""}
                 onChange={(e) =>
                   setForm((f) => ({
                     ...f,
@@ -196,70 +204,75 @@ export default function CreateVendor({
               <label className="block text-sm font-medium text-slate-700 mb-2">
                 Additional Params
               </label>
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  placeholder="Key"
-                  value={form.urlParams?.additionalParams?.key}
-                  onChange={(e) =>
-                    setForm((f) => ({
-                      ...f,
-                      urlParams: {
-                        ...f.urlParams,
-                        additionalParams: {
-                          ...f.urlParams?.additionalParams,
-                          key: e.target.value,
-                        },
-                      },
-                    }))
-                  }
-                  className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
-                />
 
-                <input
-                  type="text"
-                  placeholder="Value"
-                  value={form?.urlParams?.additionalParams?.value}
-                  onChange={(e) =>
-                    setForm((f) => ({
-                      ...f,
-                      urlParams: {
-                        ...f.urlParams,
-                        additionalParams: {
-                          ...f?.urlParams?.additionalParams,
-                          value: e.target.value,
-                        },
-                      },
-                    }))
-                  }
-                  className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
-                />
-              </div>
+              {Array.isArray(form.urlParams?.additionalParams) &&
+                form.urlParams.additionalParams.map((param, index) => {
+                  const paramsArray = form.urlParams!.additionalParams as {
+                    key: string;
+                    value: string;
+                  }[];
+
+                  return (
+                    <div key={index} className="flex items-center gap-2 mb-2">
+                      <input
+                        type="text"
+                        placeholder="Key"
+                        value={param.key}
+                        onChange={(e) => {
+                          const updated = [...paramsArray];
+                          updated[index].key = e.target.value;
+                          setForm((f) => ({
+                            ...f,
+                            urlParams: {
+                              ...f.urlParams,
+                              additionalParams: updated,
+                            },
+                          }));
+                        }}
+                        className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Value"
+                        value={param.value}
+                        onChange={(e) => {
+                          const updated = [...paramsArray];
+                          updated[index].value = e.target.value;
+                          setForm((f) => ({
+                            ...f,
+                            urlParams: {
+                              ...f.urlParams,
+                              additionalParams: updated,
+                            },
+                          }));
+                        }}
+                        className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
+                      />
+                      {index > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteParam(index)}
+                          className="px-3 py-2 bg-red-500 text-white rounded-lg"
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
+
+              <button
+                type="button"
+                onClick={handleAddParam}
+                className="mt-2 px-4 py-2  text-blue-500 font-bold rounded-lg"
+              >
+                + Add More
+              </button>
             </div>
           </div>
-
-          {/* Slider */}
-          {/* <div className="mt-4">
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              Daily Limit
-            </label>
-            <input
-              type="number"
-              value={form.dailyLimit}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev, // keep all previous values
-                  dailyLimit: Number(e.target.value), // update only clickCount
-                }))
-              }
-              placeholder="Etner Click Count"
-              className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
-            />
-
-          </div> */}
         </div>
 
-        {/* Action buttons */}
+        {/* 🔹 Buttons */}
         <div className="mt-8 flex items-center justify-end gap-4">
           <button
             type="button"
@@ -267,7 +280,6 @@ export default function CreateVendor({
               popUp?.(false);
               setContext("");
               setVendorData?.(null);
-              //   dispatch(setSingleVendor(null));
             }}
             className="px-6 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 font-medium hover:bg-slate-50"
           >

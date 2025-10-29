@@ -5,9 +5,9 @@ export interface Vendor {
   contactPhone?: string;
   urlParams?: {
     clickIdKey?: string;
-    additionalParams?: {
-      [key: string]: string; // flexible key-value pairs (e.g., uniqueID, campaignId, etc.)
-    };
+    additionalParams?: { key: string; value: string }[] | Record<string, string>; // ✅ union
+  
+    
   };
   dailyLimit?: number;
 }
