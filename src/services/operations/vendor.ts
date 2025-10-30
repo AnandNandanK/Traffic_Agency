@@ -48,6 +48,43 @@ export function createVendor(formData:Vendor) {
 
 
 
+export function updateVendor(formData:Vendor,id:number) {
+  return async (dispatch:AppDispatch): Promise<boolean> => {
+    try {
+    //   dispatch(setAgencyLoading(true));
+
+      const response = await apiConnector<Common<null>>({
+        method: "PATCH",
+        url:`${BASE_URL}/api/v1/vendors/update/${id}`,
+        bodyData: formData,
+        withCredentials: true,
+      });
+
+      console.log("UPDATE VENDOR RESPONSE:", response.data);
+
+      if (response.data.statusCode === 200) {
+        // ✅ Success case
+        dispatch(getAllVendor());
+        return true; // <--- return success
+      }
+
+      return false;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+      dispatch(setErrorMsaage(error.response?.data?.message))
+        console.error("Axios error:", error.response?.data);
+      } else {
+        console.error("Unknown error:", error);
+      }
+      return false; // <--- failure case
+    } finally {
+    //   dispatch(setAgencyLoading(false));
+    }
+  };
+}
+
+
+
 
 
 export function getAllVendor(page:number=0) {

@@ -57,6 +57,46 @@ export function CreateAgency(formData: CreateAgencyProps) {
 
 
 
+export function updateAgency(formData: CreateAgencyProps,id:number) {
+  return async (dispatch: AppDispatch): Promise<boolean> => {
+    try {
+      dispatch(setLoading(true));
+
+      const response = await apiConnector<Common<null>>({
+        method: "PATCH",
+        url:`${BASE_URL}/api/v1/trafficagencies/update/${id}`,
+        bodyData: formData,
+        headers: {
+          "X-Client-Source": "WEB",
+        },
+        withCredentials: true,
+      });
+
+      console.log("CREATE AGENCY RESPONSE:", response.data);
+
+      if (response.data.statusCode === 200) {
+        // ✅ Success case
+        dispatch(getAllAgency());
+        return true; // <--- return success
+      }
+
+      return false;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        dispatch(setErrorMsaage(error.response?.data?.message))
+        console.error("Axios error:", error.response?.data);
+      } else {
+        console.error("Unknown error:", error);
+      }
+      return false; // <--- failure case
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+}
+
+
+
 
 export function getAllAgency(page:number=0) {
   return async (dispatch: AppDispatch): Promise<boolean> => {
@@ -122,6 +162,44 @@ export function CreateCampaign(formData: Campaigns<urlParamsResponse>) {
       console.log("CREATE COMPAIGN RESPONSE:", response.data);
 
       if (response.data.statusCode === 201) {
+        dispatch(getAllCampaign());
+        return true; // <--- return success
+      }
+
+      return false;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+      dispatch(setErrorMsaage(error.response?.data?.message))
+        console.error("Axios error:", error.response?.data);
+      } else {
+        console.error("Unknown error:", error);
+      }
+      return false; // <--- failure case
+    } finally {
+      dispatch(setAgencyLoading(false));
+    }
+  };
+}
+
+
+export function updateCampaign(formData: Campaigns<urlParamsResponse>,id:number) {
+  return async (dispatch:AppDispatch): Promise<boolean> => {
+    try {
+      dispatch(setAgencyLoading(true));
+
+      const response = await apiConnector<Common<null>>({
+        method: "PATCH",
+        url:`${BASE_URL}/api/v1/trafficagencies/campaigns/update/${id}`,
+        bodyData: formData,
+        headers: {
+          "X-Client-Source": "WEB",
+        },
+        withCredentials: true,
+      });
+
+      console.log("UPDATE COMPAIGN RESPONSE:", response.data);
+
+      if (response.data.statusCode === 200) {
         dispatch(getAllCampaign());
         return true; // <--- return success
       }

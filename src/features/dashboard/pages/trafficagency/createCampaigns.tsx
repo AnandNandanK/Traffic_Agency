@@ -5,6 +5,7 @@ import { MdOutlineArrowDropDownCircle } from "react-icons/md";
 import {
   CreateCampaign,
   getAllAgency,
+  updateCampaign,
 } from "../../../../services/operations/agency";
 import { ImSpinner3 } from "react-icons/im";
 import type { CampaignResponse } from "../../../../interfaces/agencyInterface";
@@ -41,7 +42,6 @@ interface CampaignsCardProps {
   context?: string;
   setContext?: Dispatch<SetStateAction<string>>;
 }
-
 
 export default function CreateCampaigns({
   setCampaignData,
@@ -90,26 +90,31 @@ export default function CreateCampaigns({
     },
   };
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (context === "Create") {
       const res = await dispatch(CreateCampaign(formData));
       if (res) popUp?.(false);
+      setContext?.("");
+
       console.log("Submitting form data:", formData);
     } else if (context === "Edit") {
+      if (campaignData?.id) {
+        const res = await dispatch(updateCampaign(formData, campaignData?.id));
+        if (res) {
+          popUp?.(false);
+          setCampaignData?.(null);
+          setContext?.("");
+        }
+      }
+
       console.log("Updating Campaign ID:", form);
     }
   };
 
-
-
   useEffect(() => {
     dispatch(getAllAgency());
   }, [dispatch]);
-
-
-
 
   // ✅ Prefill in edit mode
   useEffect(() => {
@@ -131,15 +136,10 @@ export default function CreateCampaigns({
         notificationThreshold: campaignData.notificationThreshold ?? 50,
       });
 
-      const selectedAgency = agency.find(
-        (a) => a.id === campaignData.agencyId
-      );
+      const selectedAgency = agency.find((a) => a.id === campaignData.agencyId);
       if (selectedAgency) setSelected(selectedAgency.name);
     }
   }, [context, dispatch, campaignData, agency]);
-
-  
-
 
   // ✅ Add / Remove Params
   const addParam = () =>
@@ -147,7 +147,10 @@ export default function CreateCampaigns({
       ...f,
       urlParams: {
         ...f.urlParams,
-        additionalParams: [...f.urlParams.additionalParams, { key: "", value: "" }],
+        additionalParams: [
+          ...f.urlParams.additionalParams,
+          { key: "", value: "" },
+        ],
       },
     }));
 
@@ -156,7 +159,9 @@ export default function CreateCampaigns({
       ...f,
       urlParams: {
         ...f.urlParams,
-        additionalParams: f.urlParams.additionalParams.filter((_, i) => i !== index),
+        additionalParams: f.urlParams.additionalParams.filter(
+          (_, i) => i !== index
+        ),
       },
     }));
 
@@ -218,17 +223,18 @@ export default function CreateCampaigns({
             </label>
             <input
               type="text"
-            
               value={form[item.key as keyof Campaigns<Params>] as string}
               onChange={(e) =>
-                handleChange(item.key as keyof Campaigns<Params>, e.target.value)
+                handleChange(
+                  item.key as keyof Campaigns<Params>,
+                  e.target.value
+                )
               }
               placeholder={item.placeholder}
               className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
             />
           </div>
         ))}
-
 
         {/* URL Params */}
         <div className="p-3 mt-4 border-slate-200 border-4 rounded-2xl space-y-3.5">
@@ -253,7 +259,6 @@ export default function CreateCampaigns({
               className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 border-slate-200 focus:ring-sky-400"
             />
           </div>
-          
 
           {/* Additional Params */}
           <div>

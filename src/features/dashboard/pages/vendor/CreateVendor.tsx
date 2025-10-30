@@ -1,7 +1,10 @@
 import type { Dispatch, SetStateAction } from "react";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../../store/hooks";
-import { createVendor } from "../../../../services/operations/vendor";
+import {
+  createVendor,
+  updateVendor,
+} from "../../../../services/operations/vendor";
 import type {
   AllVendorResponse,
   Vendor,
@@ -116,6 +119,14 @@ export default function CreateVendor({
       const res = await dispatch(createVendor(formData));
       if (res) {
         popUp?.(false);
+      }
+    } else if (context === "Edit") {
+      if (vendorData?.id) {
+        const res = await dispatch(updateVendor(formData, vendorData.id));
+        if (res) {
+          setVendorData?.(null);
+          setContext?.("");
+        }
       }
     }
   };

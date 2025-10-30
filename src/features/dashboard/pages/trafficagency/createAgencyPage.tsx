@@ -2,7 +2,10 @@ import type { Dispatch } from "react";
 import React, { useEffect, useState, type SetStateAction } from "react";
 
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
-import { CreateAgency } from "../../../../services/operations/agency";
+import {
+  CreateAgency,
+  updateAgency,
+} from "../../../../services/operations/agency";
 import { ImSpinner3 } from "react-icons/im";
 import type { AgencyData } from "./AgencyTable";
 import ErrorPopup from "../../../../components/ErrorPopupPage";
@@ -45,6 +48,7 @@ export default function AgencyCUpage({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (context === "Create") {
       const res = await dispatch(CreateAgency(form));
 
@@ -56,8 +60,24 @@ export default function AgencyCUpage({
           contactPhone: "",
         });
       }
+
       console.log(form);
       console.log(context);
+    } else {
+      if (agencyData?.id) {
+        const res = await dispatch(updateAgency(form, agencyData?.id));
+        console.log("RESPONSE..........",res)
+        if (res) {
+          popUp?.(false);
+          setForm({
+            name: "",
+            contactEmail: "",
+            contactPhone: "",
+          });
+        }
+         setAgencyData?.(null); // ✅ ADD THIS LINE
+    setContext("");   
+      }
     }
   };
 
@@ -86,7 +106,8 @@ export default function AgencyCUpage({
       className="min-h-screen inset-0 fixed  bg-black/40 p-6 z-50 
             flex items-center justify-center "
     >
-      <ErrorPopup/>
+      <ErrorPopup />
+
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-lg p-6 sm:p-8"
