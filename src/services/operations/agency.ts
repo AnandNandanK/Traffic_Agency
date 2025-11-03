@@ -145,41 +145,43 @@ export interface urlParamsResponse{
 
 
 export function CreateCampaign(formData: Campaigns<urlParamsResponse>) {
-  return async (dispatch:AppDispatch): Promise<boolean> => {
+  return async (dispatch: AppDispatch): Promise<boolean> => {
     try {
       dispatch(setAgencyLoading(true));
 
       const response = await apiConnector<Common<null>>({
         method: "POST",
-        url:`${BASE_URL}/api/v1/trafficagencies/campaigns/create`,
+        url: `${BASE_URL}/api/v1/trafficagencies/campaigns/create`,
         bodyData: formData,
-        headers: {
-          "X-Client-Source": "WEB",
-        },
+        headers: { "X-Client-Source": "WEB" },
         withCredentials: true,
       });
 
-      console.log("CREATE COMPAIGN RESPONSE:", response.data);
+      console.log("CREATE CAMPAIGN RESPONSE:", response.data);
 
       if (response.data.statusCode === 201) {
-        dispatch(getAllCampaign());
-        return true; // <--- return success
+        await dispatch(getAllCampaign()); // ✅ wait until campaigns are fetched
+        return true;
       }
 
+      dispatch(setErrorMsaage(response.data.message || "Unknown error"));
       return false;
+
     } catch (error) {
       if (axios.isAxiosError(error)) {
-      dispatch(setErrorMsaage(error.response?.data?.message))
+        dispatch(setErrorMsaage(error.response?.data?.message || "Axios error"));
         console.error("Axios error:", error.response?.data);
       } else {
+        dispatch(setErrorMsaage("Unexpected error"));
         console.error("Unknown error:", error);
       }
-      return false; // <--- failure case
+      return false;
     } finally {
-      dispatch(setAgencyLoading(false));
+      dispatch(setAgencyLoading(false)); // ✅ always stop loading after everything
     }
   };
 }
+
 
 
 export function updateCampaign(formData: Campaigns<urlParamsResponse>,id:number) {

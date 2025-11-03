@@ -1,50 +1,50 @@
 import { useEffect, useState } from "react";
-// import {  useAppSelector } from "../store/hooks";
-// import { setMassage } from "../slices/authSlice";
 import { ImCross } from "react-icons/im";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { setErrorMsaage } from "../slices/userSlice";
 
 export default function PopUpMessage() {
   const dispatch = useAppDispatch();
-
-
   const [hidden, setHidden] = useState(false);
-  const massage = useAppSelector((state) => state.user.errorMassage);
+  const message = useAppSelector((state) => state.user.errorMassage);
 
   const clickHandler = () => {
     setHidden(true);
     dispatch(setErrorMsaage(""));
   };
 
-  // Reset hidden whenever massage changes
+  // Reset hidden whenever message changes
   useEffect(() => {
-    if (massage) {
-      setHidden(false);
-    }
-  }, [massage]);
+    if (message) setHidden(false);
+  }, [message]);
 
-  
   // Clean up on unmount
   useEffect(() => {
     return () => {
       dispatch(setErrorMsaage(""));
-    };                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-  }, []);
+    };
+  }, [dispatch]);
+
+  if (!message || hidden) return null;
 
   return (
-    <>
-      {!hidden && massage && (
-        <p className="bg-red-400 opacity-80 text-sm text-white my-3 py-3 px-4 rounded-sm relative hover:cursor-pointer text-center">
-          {massage}
-          <span
-            onClick={clickHandler}
-            className="absolute top-[-4px] right-[-3px] rounded-full"
-          >
-            <ImCross className="text-black text-[9px] font-extrabold" />
-          </span>
-        </p>
-      )}
-    </>
+    <div
+      className="
+        fixed top-5 right-5 z-[9999]
+        bg-red-500 text-white text-sm 
+        py-3 px-4 rounded-md shadow-lg 
+        flex items-center gap-2
+        animate-fadeIn
+      "
+      style={{ pointerEvents: "auto" }}
+    >
+      <span className="flex-1">{message}</span>
+      <button
+        onClick={clickHandler}
+        className="text-black bg-white rounded-full p-1 hover:bg-gray-200"
+      >POP UP MASSAGE
+        <ImCross className="text-[10px] font-extrabold" />
+      </button>
+    </div>
   );
 }

@@ -19,9 +19,9 @@ const sideData = [
   },
   {
     id: 2,
-    title: "Vendor",
+    title: "Advertiser",
     submenu: [
-      { key: "vendor", title: "Vendor", path: "/dashboard/vendor", icon: <FaChalkboardUser size={20}/> },
+      { key: "vendor", title: "Advertiser", path: "/dashboard/vendor", icon: <FaChalkboardUser size={20}/> },
     ],
   },
   {

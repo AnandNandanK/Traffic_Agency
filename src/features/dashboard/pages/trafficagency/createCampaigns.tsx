@@ -90,13 +90,16 @@ export default function CreateCampaigns({
     },
   };
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (context === "Create") {
       const res = await dispatch(CreateCampaign(formData));
-      if (res) popUp?.(false);
+      if (res) {
+        popUp?.(false);
       setContext?.("");
 
+      }
       console.log("Submitting form data:", formData);
     } else if (context === "Edit") {
       if (campaignData?.id) {
@@ -349,9 +352,11 @@ export default function CreateCampaigns({
           <button
             type="submit"
             disabled={loading}
+          
             className="px-6 w-3/12 h-10 py-2 flex justify-center items-center rounded-lg bg-sky-700 text-white font-semibold shadow hover:bg-sky-800"
           >
             {loading ? <ImSpinner3 className="animate-spin" /> : "Save"}
+            Save
           </button>
         </div>
       </form>

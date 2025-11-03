@@ -34,7 +34,7 @@ export default function CreateVendorLayout() {
           }}
           className="bg-green-400 text-white p-2 rounded-sm hover:cursor-pointer flex gap-1 items-center uppercase font-semibold shadow-lg shadow-black/40"
         >
-          Create Vendor
+          Create Advertiser
           <span>
             <FaPlus />
           </span>

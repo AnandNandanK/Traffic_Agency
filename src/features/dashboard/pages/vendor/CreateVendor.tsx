@@ -165,7 +165,7 @@ export default function CreateVendor({
           id="edit-Vendor-title"
           className="text-2xl font-extrabold text-slate-900 mb-6"
         >
-          {context === "Create" ? "Create Vendor" : "Update Vendor"}
+          {context === "Create" ? "Create Advertiser" : "Update Advertiser"}
         </h2>
 
         {/* 🔹 Basic Fields */}
