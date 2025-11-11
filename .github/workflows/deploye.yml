@@ -27,11 +27,11 @@ jobs:
 
       - name: Remove old dist
         run: |
-          if [ -d /var/www/html/studyMateFrontend/dist ]; then
-            rm -rf /var/www/html/studyMateFrontend/dist
+          if [ -d /home/apps/frontendserver-trafficroutingdashboard/dist ]; then
+            rm -rf /home/apps/frontendserver-trafficroutingdashboard/dist
           fi
 
       - name: Transfer new dist
         run: |
-          mkdir -p /var/www/html/studyMateFrontend
-          mv ./dist /var/www/html/studyMateFrontend/
+          mkdir -p /home/apps/frontendserver-trafficroutingdashboard
+          mv ./dist /home/apps/frontendserver-trafficroutingdashboard/
